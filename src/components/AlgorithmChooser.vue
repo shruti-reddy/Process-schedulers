@@ -3,8 +3,10 @@ import OutputTable from "../components/OutputTable.vue";
 import ChartComponent from '../components/ChartComponent.vue';
 export default {
     name: 'algorithm-chooser',
-    components: { OutputTable ,
-        ChartComponent},
+    components: { 
+        OutputTable ,
+        ChartComponent
+    },
     data() {
         return {
             algorithms: [
@@ -27,7 +29,7 @@ export default {
             selectedAlgorithm: '',
             processes: [],
             numberOfProcesses: '',
-            processStarted: false,
+            isProcessStarted: false,
         }
     },
     watch: {
@@ -46,8 +48,11 @@ export default {
     methods: {
         selectedAlgorithmChanged(algo) {
             this.selectedAlgorithm = algo.title;
-            console.log(this.selectedAlgorithm)
+            this.isProcessStarted=false;
         },
+        processStarted(value) {
+            this.isProcessStarted = value;
+        }
     }
 }
 </script>
@@ -75,11 +80,11 @@ export default {
                 <input placeholder="Enter Burst time" v-model="process.burstTime" type="number"></input>
             </div>
         </div>
-        <OutputTable :algorithm="selectedAlgorithm" :processes="processes" /> 
+        <OutputTable :algorithm="selectedAlgorithm" :processes="processes" @process-started="processStarted"/> 
         </div>
     </div>
         <div class="chart">
-            <ChartComponent :processes="processes"/>
+            <ChartComponent :processes="processes" :isProcessStarted="isProcessStarted"/>
         </div>
     </div>
     

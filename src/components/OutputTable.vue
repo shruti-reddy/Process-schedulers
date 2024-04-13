@@ -7,6 +7,7 @@ export default {
         algorithm: String,
         processes: Array,
     },
+    emits: ["processStarted"],
     data() {
         return {
             outputProcesses: [],
@@ -16,11 +17,9 @@ export default {
         calculateOutputs() {
             switch (this.algorithm) {
                 case 'FCFS':
-                    console.log('running function')
                     this.outputProcesses = calculateOutputForFCFS(this.processes);
                     break;
                 case 'SJF':
-                    console.log('sjf')
                     this.outputProcesses = calculateOutputForSJF(this.processes);
                     break;
             }
@@ -70,6 +69,7 @@ export default {
         },
         startClicked() {
             this.calculateOutputs();
+            this.$emit('processStarted', true);
         }
     },
 }
