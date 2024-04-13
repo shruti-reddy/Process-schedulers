@@ -1,8 +1,10 @@
 <script>
 import OutputTable from "../components/OutputTable.vue";
+import ChartComponent from '../components/ChartComponent.vue';
 export default {
     name: 'algorithm-chooser',
-    components: { OutputTable },
+    components: { OutputTable ,
+        ChartComponent},
     data() {
         return {
             algorithms: [
@@ -52,13 +54,15 @@ export default {
 
 <template>
     <h1><b>Select CPU shceduling algorithm</b></h1>
+    <div class="app">
     <div class="container">
-        <div class="card" v-for="algo in algorithms" :key="algo.title">
+        <div class="algorithm-chooser">
+          <div class="card" v-for="algo in algorithms" :key="algo.title">
             <button class="title" v-on:click="selectedAlgorithmChanged(algo)">{{ algo.title }}</button>
             <p class="description">{{ algo.description }}</p>
+          </div>
         </div>
-    </div>
-    <div class="wrapper" v-if="selectedAlgorithm">
+        <div class="wrapper" v-if="selectedAlgorithm">
         <div class="flex-row">
             <label>Enter number of processes to run</label>
             <input name="totalProcess" class="abc"
@@ -71,14 +75,25 @@ export default {
                 <input placeholder="Enter Burst time" v-model="process.burstTime" type="number"></input>
             </div>
         </div>
-        <OutputTable :algorithm="selectedAlgorithm" :processes="processes" />
+        <OutputTable :algorithm="selectedAlgorithm" :processes="processes" /> 
+        </div>
     </div>
+        <div class="chart">
+            <ChartComponent :processes="processes"/>
+        </div>
+    </div>
+    
 </template>
 
 <style>
+.app{
+    display:flex;
+}
 .container {
     display: flex;
     flex: row;
+    flex-direction:column;
+    position: relative;
 }
 
 .title {
@@ -90,6 +105,23 @@ export default {
     margin: 10px;
     width: 150px;
     height: 40px;
+}
+.algorithm-chooser {
+    
+    display:flex;
+  flex: 1;
+  flex-direction:row;
+  
+}
+
+.chart {
+    flex: 1;
+    border: 2px solid white;
+    border-radius: 10px;
+    position: fixed;
+    width: 600px;
+    margin-left: 700px;
+    height: 300px;
 }
 
 .title:hover+.description {
