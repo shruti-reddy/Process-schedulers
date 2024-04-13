@@ -1,5 +1,6 @@
 <script>
 import calculateOutputForFCFS from '@/helpers/fcfs';
+import calculateOutputForSJF from '@/helpers/sjf';
 export default {
     name: 'output-table',
     props: {
@@ -16,11 +17,11 @@ export default {
             switch (this.algorithm) {
                 case 'FCFS':
                     console.log('running function')
-                    calculateOutputForFCFS();
+                    this.outputProcesses = calculateOutputForFCFS(this.processes);
                     break;
                 case 'SJF':
                     console.log('sjf')
-                    this.calculateOutputForSJF();
+                    this.outputProcesses = calculateOutputForSJF(this.processes);
                     break;
             }
         },
