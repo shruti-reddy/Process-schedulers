@@ -91,9 +91,11 @@ export default {
 </template>
 
 <style>
+
 .app{
     display:flex;
 }
+
 .container {
     display: flex;
     flex: row;
@@ -111,6 +113,13 @@ export default {
     width: 150px;
     height: 40px;
 }
+
+.title:hover {
+  background-color: #1a0dab; 
+}
+
+
+
 .algorithm-chooser {
     
     display:flex;
@@ -132,6 +141,7 @@ export default {
 .title:hover+.description {
     display: block;
     color: rgb(43, 43, 99);
+    margin:0;
 }
 
 button:active {
@@ -140,10 +150,15 @@ button:active {
 
 .description {
     display: none;
+    position: absolute;
+    left: 0; 
+    top: 20;
+    
 }
 
 .wrapper {
-    margin: 10px 0;
+  
+    margin: 35px 0;
     display: flex;
     flex-direction: column;
 }
@@ -191,4 +206,5 @@ label {
 .abc {
     width: 12%;
 }
+
 </style>

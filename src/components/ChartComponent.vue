@@ -1,6 +1,22 @@
 <template>
-  <div>
+  <div class="parent">
+    <div><h1>Running</h1></div>
+    
     <div v-if="isProcessStarted" class="processes">
+      
+      <div
+        v-for="(process, index) in outputProcesses"
+        :key="index"
+        class="process"
+        :style="{ width: process.width + 'px', backgroundColor: process.color }"
+      >
+        <div class="label">{{ process.name }} : {{process.burstTime}}</div>
+      </div>
+      
+    </div>
+    <div><h1>Waiting</h1></div>
+    <div v-if="isProcessStarted" class="processes">
+      
       <div
         v-for="(process, index) in outputProcesses"
         :key="index"
@@ -9,10 +25,9 @@
       >
         <div class="label">{{ process.name }}</div>
       </div>
+      
     </div>
-    <!-- <div>
-      <button v-on:click="runFCFS">FCFS</button>
-    </div> -->
+   
   </div>
 </template>
 
@@ -55,7 +70,7 @@ export default {
       this.outputProcesses.forEach((process) => {
         const arrivalDelay =process.arrivalTime - 1; 
         setTimeout(() => {
-          process.width = process.burstTime * 20;
+          process.width = process.burstTime * 40;
         }, arrivalDelay * 1000);
         currentTime = Math.max(currentTime, arrivalDelay) + process.burstTime;
       });
@@ -69,12 +84,26 @@ export default {
 </script>
 
 <style scoped>
+.parent{
+  display:flex;
+  flex-direction:column;
+  border:3px solid #42b883;
+  position:fixed;
+  width:700px;
+  text-align:center;
+  border-radius:20px ;
+}
 .processes {
   display: flex;
   align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
   height: 200px;
+  border:3px solid #42b883;
+   
+  margin:5px;
+  border-radius:20px ;
+ 
 }
 
 .process {
@@ -84,6 +113,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  margin:5px
   /* transition: 1s linear;  */
 }
 

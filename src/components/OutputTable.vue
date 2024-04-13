@@ -11,6 +11,7 @@ export default {
     data() {
         return {
             outputProcesses: [],
+            isProcessStarted:false,
         }
     },
     methods: {
@@ -25,6 +26,7 @@ export default {
             }
         },
         startClicked() {
+            this.isProcessStarted=true;
             this.calculateOutputs();
             this.$emit('processStarted', true);
         }
@@ -33,7 +35,8 @@ export default {
 </script>
 
 <template>
-    <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button>
+    <!-- <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button>
+    
     <div v-for="process in outputProcesses" :key="process.name" class="processes">
         <p>Name: {{ process.name }}</p>
         <p> Arrival Time: {{ process.arrivalTime }} </p>
@@ -41,7 +44,30 @@ export default {
         <p> Waiting Time: {{ process.waitingTime }}</p>
         <p> Turn Around Time: {{ process.turnAroundTime }} </p>
         <p> Completion Time: {{ process.completionTime }} </p>
-    </div>
+    </div> -->
+    <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button>
+<table v-if="isProcessStarted">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Arrival Time</th>
+      <th>Burst Time</th>
+      <th>Waiting Time</th>
+      <th>Turn Around Time</th>
+      <th>Completion Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="process in outputProcesses" :key="process.name">
+      <td>{{ process.name }}</td>
+      <td>{{ process.arrivalTime }}</td>
+      <td>{{ process.burstTime }}</td>
+      <td>{{ process.waitingTime }}</td>
+      <td>{{ process.turnAroundTime }}</td>
+      <td>{{ process.completionTime }}</td>
+    </tr>
+  </tbody>
+</table>
 
 </template>
 
@@ -52,6 +78,34 @@ export default {
 }
 
 button{
-    width: 20%;
+    width: 40%;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+  
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+  
+th {
+    background-color: #42b883;
+    color:white;
+    
+}
+  
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+  
+tr:hover {
+    background-color: #ddd;
+}
+
+
 </style>
