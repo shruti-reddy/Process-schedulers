@@ -63,7 +63,7 @@ export default {
     <div class="container">
         <div class="algorithm-chooser">
           <div class="card" v-for="algo in algorithms" :key="algo.title">
-            <button class="title" v-on:click="selectedAlgorithmChanged(algo)">{{ algo.title }}</button>
+            <button class="title" :class="{ 'active': selectedAlgorithm === algo.title }" v-on:click="selectedAlgorithmChanged(algo)">{{ algo.title }}</button>
             <p class="description">{{ algo.description }}</p>
           </div>
         </div>
@@ -116,6 +116,10 @@ export default {
 
 .title:hover {
   background-color: #1a0dab; 
+}
+
+.active {
+    background-color: #1a0dab;
 }
 
 
