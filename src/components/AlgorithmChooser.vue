@@ -1,8 +1,8 @@
 <script>
-import ProcessTable from "../components/ProcessTable.vue";
+import OutputTable from "../components/OutputTable.vue";
 export default {
     name: 'algorithm-chooser',
-    components: {ProcessTable},
+    components: { OutputTable },
     data() {
         return {
             algorithms: [
@@ -23,13 +23,29 @@ export default {
                 },
             ],
             selectedAlgorithm: '',
+            processes: [],
+            numberOfProcesses: '',
+            processStarted: false,
+        }
+    },
+    watch: {
+        numberOfProcesses: function () {
+            this.processes = [];
+            for (let i = 0; i < this.numberOfProcesses; i++) {
+                this.processes.push({
+                    name: `P${i + 1}`,
+                    arrivalTime: "",
+                    burstTime: "",
+                    priority: ""
+                })
+            }
         }
     },
     methods: {
         selectedAlgorithmChanged(algo) {
             this.selectedAlgorithm = algo.title;
             console.log(this.selectedAlgorithm)
-        }
+        },
     }
 }
 </script>
@@ -37,12 +53,26 @@ export default {
 <template>
     <h1><b>Select CPU shceduling algorithm</b></h1>
     <div class="container">
-        <div class="card" v-for="algo in algorithms" :key="algo">
+        <div class="card" v-for="algo in algorithms" :key="algo.title">
             <button class="title" v-on:click="selectedAlgorithmChanged(algo)">{{ algo.title }}</button>
             <p class="description">{{ algo.description }}</p>
         </div>
     </div>
-    <ProcessTable :algorithm="selectedAlgorithm"/>
+    <div class="wrapper" v-if="selectedAlgorithm">
+        <div class="flex-row">
+            <label>Enter number of processes to run</label>
+            <input name="totalProcess" class="abc"
+                v-model="numberOfProcesses"></input>
+        </div>
+        <div v-for="process in processes" :key="process.name" class="flex-column">
+            <div class="processes">
+                <input placeholder="Enter process name" v-model="process.name"></input>
+                <input placeholder="Enter Arrival time" v-model="process.arrivalTime" type="number"></input>
+                <input placeholder="Enter Burst time" v-model="process.burstTime" type="number"></input>
+            </div>
+        </div>
+        <OutputTable :algorithm="selectedAlgorithm" :processes="processes" />
+    </div>
 </template>
 
 <style>
@@ -57,21 +87,71 @@ export default {
     border-radius: 5px;
     border: 1px solid grey;
     font-size: larger;
-    margin: 20px;
+    margin: 10px;
     width: 150px;
     height: 40px;
 }
 
-.title:hover + .description {
-  display: block;
-  color: rgb(43, 43, 99);
+.title:hover+.description {
+    display: block;
+    color: rgb(43, 43, 99);
 }
 
-.button-selected {
+button:active {
     background-color: blue;
 }
 
 .description {
     display: none;
+}
+
+.wrapper {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: row;
+}
+
+.processes {
+    display: flex;
+    flex-direction: row;
+}
+
+button {
+    background-color: #42b883;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid grey;
+    font-size: larger;
+    margin: 10px;
+    width: 150px;
+    height: 40px;
+}
+
+input {
+    font-size: 14px;
+    margin: 10px;
+    padding: 14px;
+    border: 1px solid #42b883;
+    border-radius: 22px;
+    width: 30%;
+}
+
+label {
+    margin: auto 0;
+}
+
+.abc {
+    width: 12%;
 }
 </style>
