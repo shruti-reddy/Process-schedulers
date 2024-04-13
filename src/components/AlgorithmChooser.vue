@@ -46,7 +46,6 @@ export default {
     methods: {
         selectedAlgorithmChanged(algo) {
             this.selectedAlgorithm = algo.title;
-            console.log(this.selectedAlgorithm)
         },
     }
 }

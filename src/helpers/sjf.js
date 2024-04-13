@@ -1,9 +1,12 @@
 import { MinPriorityQueue } from "@datastructures-js/priority-queue";
 
 class Job {
-    name;
-    arrivalTime;
-    burstTime;
+    constructor(name, arrivalTime, burstTime) {
+        this.name = name;
+        this.arrivalTime = arrivalTime;
+        this.burstTime = burstTime;
+    }
+    
 }
 
 function shortestJobFirst(processes) {
@@ -14,39 +17,56 @@ function shortestJobFirst(processes) {
         jobs[i] = new Job(processes[i].name, processes[i].arrivalTime, processes[i].burstTime);
     }
     // sort jobs based on arrival
-    jobs.sort((a, b) => a.arrival - b.arrival);
+    jobs.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     // min priority queue to get shortest job
-    const readyJobs = new MinPriorityQueue((a, b) => a.burst - b.burst);
+    const readyJobs = new MinPriorityQueue(a => a.burstTime);
     // PriorityQueue < Job > readyJobs = new PriorityQueue < Job > ((a, b) => a.burst - b.burst);
 
     let totalWaitTime = 0;
-    let currentTime = jobs[0].arrival;
+    let currentTime = jobs[0].arrivalTime;
     let i = 0;
+    let outputProcesses = [];
     debugger;
     while (i < n) {
         // add jobs that arrived before current time
-        while (i < n && currentTime >= jobs[i].arrival) {
-            readyJobs.add(jobs[i]);
+        while (i < n && currentTime >= jobs[i].arrivalTime) {
+            readyJobs.enqueue(jobs[i]);
             i++;
         }
         if (i < n && readyJobs.isEmpty()) {
-            let nextJobsArrival = jobs[i].arrival;
+            let nextJobsArrival = jobs[i].arrivalTime;
             totalWaitTime += (nextJobsArrival - currentTime);
             currentTime = nextJobsArrival;
             continue;
         }
-        nextJob = readyJobs.remove();
-        totalWaitTime += (currentTime - nextJob.arrival);
-        currentTime += nextJob.burst;
+        const nextJob = readyJobs.dequeue();
+        const waitingTime = Math.max(currentTime - nextJob.arrivalTime, 0);
+        const turnAroundTime = waitingTime+nextJob.burstTime;
+        const completionTime = currentTime + nextJob.burstTime;
+        const outputProcess = {...nextJob};
+        outputProcess.waitingTime = waitingTime;
+        outputProcess.turnAroundTime = turnAroundTime;
+        outputProcess.completionTime = completionTime;
+        outputProcesses.push(outputProcess);
+        totalWaitTime += waitingTime;
+        currentTime += nextJob.burstTime;
     }
     while (!readyJobs.isEmpty()) {
-        nextJob = readyJobs.remove();
-        totalWaitTime += (currentTime - nextJob.arrival);
-        currentTime += nextJob.burst;
+        const nextJob = readyJobs.dequeue();
+        const waitingTime = Math.max(currentTime - nextJob.arrivalTime, 0);
+        const turnAroundTime = waitingTime+nextJob.burstTime;
+        const completionTime = currentTime + nextJob.burstTime;
+        const outputProcess = {...nextJob};
+        outputProcess.waitingTime = waitingTime;
+        outputProcess.turnAroundTime = turnAroundTime;
+        outputProcess.completionTime = completionTime;
+        outputProcesses.push(outputProcess);
+        totalWaitTime += waitingTime;
+        currentTime += nextJob.burstTime;
     }
 
-    return totalWaitTime / n;
+    return outputProcesses;
 
 }
 
