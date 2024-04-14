@@ -97,19 +97,18 @@ export default {
 
 <style scoped>
 .parent {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  border: 3px solid #42b883;
-  position: fixed;
-  width: 700px;
+  border: 2px solid #42b883;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 
 .running-process {
   width: 100%;
   height: 150px;
-  border: 3px solid #42b883;
+  border: 2px solid #42b883;
 }
 
 .processes {
@@ -118,10 +117,9 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
   height: 150px;
-  border: 3px solid #42b883;
-
+  border: 2px solid #42b883;
   margin: 5px;
-  border-radius: 20px;
+  border-radius: 12px;
 
 }
 
