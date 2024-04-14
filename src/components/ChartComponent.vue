@@ -72,22 +72,23 @@ export default {
       this.pending = [...outputProcesses];
       
       outputProcesses.forEach((process, index) => {
-        process.width = process.burstTime*20;
+        process.width = process.burstTime*10;
         process.color = this.generateRandomColor();
       });
 
       let currentTime = 0;
       outputProcesses.forEach((process) => {
         const arrivalDelay = process.arrivalTime - 1;
+        
         setTimeout(() => {
           this.pending = this.pending.filter(p => p.name != process.name);
           debugger;
           this.running = [process];
           console.log(this.running)
-          process.width = process.burstTime * 40;
+          process.width = process.burstTime * 10;
           this.completed.push(process);
           currentTime = Math.max(currentTime, arrivalDelay) + process.burstTime;
-        }, process.arrivalTime * 1000);
+        }, process.waitingTime * 1000);
 
       });
     },
@@ -109,6 +110,7 @@ export default {
   width: 100%;
   height: 150px;
   border: 2px solid #42b883;
+  align-items: center
 }
 
 .processes {
