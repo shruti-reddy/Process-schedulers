@@ -67,29 +67,29 @@ export default {
 <template>
     <h1><b>Select CPU shceduling algorithm</b></h1>
     <div class="app">
-        <div class="container">
-            <div class="algorithm-chooser">
-                <div class="card" v-for="algo in algorithms" :key="algo.title">
-                    <button class="title" v-on:click="selectedAlgorithmChanged(algo)">{{ algo.title }}</button>
-                    <p class="description">{{ algo.description }}</p>
-                </div>
-            </div>
-            <div class="wrapper" v-if="selectedAlgorithm">
-                <div class="flex-row">
-                    <label>Enter number of processes to run</label>
-                    <input name="totalProcess" class="abc" v-model="numberOfProcesses"></input>
-                </div>
-                <div v-for="process in processes" :key="process.name" class="flex-column">
-                    <div class="processes">
-                        <input placeholder="Enter process name" v-model="process.name"></input>
-                        <input placeholder="Enter Arrival time" v-model="process.arrivalTime" type="number"></input>
-                        <input placeholder="Enter Burst time" v-model="process.burstTime" type="number"></input>
-                        <input v-if="selectedAlgorithm == 'Priority Scheduling'" placeholder="Enter priority" v-model="process.priority" type="number"></input>
-                    </div>
-                </div>
-                <OutputTable :algorithm="selectedAlgorithm" :processes="processes" @process-started="processStarted" />
+    <div class="container">
+        <div class="algorithm-chooser">
+          <div class="card" v-for="algo in algorithms" :key="algo.title">
+            <button class="title" :class="{ 'active': selectedAlgorithm === algo.title }" v-on:click="selectedAlgorithmChanged(algo)">{{ algo.title }}</button>
+            <p class="description">{{ algo.description }}</p>
+          </div>
+        </div>
+        <div class="wrapper" v-if="selectedAlgorithm">
+        <div class="flex-row">
+            <label>Enter number of processes to run</label>
+            <input name="totalProcess" class="abc"
+                v-model="numberOfProcesses"></input>
+        </div>
+        <div v-for="process in processes" :key="process.name" class="flex-column">
+            <div class="processes">
+                <input placeholder="Enter process name" v-model="process.name"></input>
+                <input placeholder="Enter Arrival time" v-model="process.arrivalTime" type="number"></input>
+                <input placeholder="Enter Burst time" v-model="process.burstTime" type="number"></input>
             </div>
         </div>
+        <OutputTable :algorithm="selectedAlgorithm" :processes="processes" @process-started="processStarted"/> 
+        </div>
+    </div>
         <div class="chart">
             <ChartComponent :inputProcesses="processes" :isProcessStarted="isProcessStarted" />
         </div>
@@ -124,6 +124,12 @@ export default {
 .title:hover {
   background-color: #1a0dab; 
 }
+
+.active {
+    background-color: #1a0dab;
+}
+
+
 
 .algorithm-chooser {
     display: flex;
