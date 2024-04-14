@@ -23,6 +23,9 @@ export default {
                 case 'SJF':
                     this.outputProcesses = calculateOutputForSJF(this.processes);
                     break;
+                case 'Priority Scheduling':
+                    this.outputProcesses = calculateOutputForPriorityScheduling(this.processes);
+                    break;
             }
         },
         startClicked() {

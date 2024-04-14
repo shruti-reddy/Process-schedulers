@@ -1,6 +1,6 @@
 function calculateOutputForFCFS(processes) {
+    
     processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-
     // Initialize variables to store waiting time, turnaround time, and completion time
     let totalWaitingTime = 0;
     let totalTurnaroundTime = 0;
@@ -26,7 +26,7 @@ function calculateOutputForFCFS(processes) {
         outputProcess['waitingTime'] = waitingTime,
         outputProcess['turnAroundTime'] = turnaroundTime;
         outputProcess['completionTime'] = completionTime;
-        outputProcesses.push(outputProcess);;
+        outputProcesses.push(outputProcess);
     });
 
     // Calculate average waiting time and turnaround time
