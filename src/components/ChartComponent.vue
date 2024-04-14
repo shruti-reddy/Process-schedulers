@@ -68,9 +68,6 @@ export default {
       }
     },
   },
-  // computed: {
-  //   ...mapState(useProcessStore, ["pending", "running", "completed"])
-  // },
   methods: {
     generateRandomColor() {
       return "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -92,12 +89,11 @@ export default {
       let currentTime = 0;
       outputProcesses.forEach((process) => {
         const arrivalDelay = process.arrivalTime;
-
+        console.log()
         setTimeout(() => {
           this.pending = this.pending.filter((p) => p.name != process.name);
           debugger;
           this.running = [process];
-          console.log(this.running);
           process.width = process.burstTime * 10;
           this.completed.push(process);
           currentTime = Math.max(currentTime, arrivalDelay) + process.burstTime;
@@ -116,7 +112,6 @@ export default {
   border: 2px solid #42b883;
   text-align: center;
   border-radius: 12px;
-  max-height: 60%;
   max-width: 95%;
 }
 

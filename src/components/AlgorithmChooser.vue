@@ -12,18 +12,19 @@ export default {
             algorithms: [
                 {
                     title: "FCFS",
-                    description: "The first come first serve algorithm is a scheduling algorithm that schedules the processes in the order of their arrival in the ready queue.",
+                    description: "The first come first serve algorithm schedules the processes in the order of their arrival in the ready queue.",
                 },
                 {
                     title: "SJF",
-                    description: "The shortest job first algorithm is a scheduling algorithm that schedules the processes in the order of their burst time.",
+                    description: "The shortest job first algorithm schedules the processes in the order of their burst time.",
                 },
                 {
                     title: "Round Robin",
-                    description: "The round robin algorithm is a scheduling algorithm that schedules the processes in the order of their arrival in the ready queue.",
+                    description: "The round robin algorithm schedules the processes in the order of their arrival in the ready queue.",
                 },
                 {
-                    title: 'Priority Scheduling'
+                    title: 'Priority Scheduling',
+                    description: "The priority scheduling algorithm schedules the processes in the order of their arrival in the ready queue.",
                 }
             ],
             selectedAlgorithm: '',
@@ -48,7 +49,7 @@ export default {
                 { name: 'p2', arrivalTime: 1, burstTime: 15 },
                 { name: 'p3', arrivalTime: 6, burstTime: 14 },
                 { name: 'p4', arrivalTime: 0, burstTime: 10 },
-                { name: 'p5', arrivalTime: 3, burstTime: 18 }
+                { name: 'p5', arrivalTime: 3, burstTime: 18 },
             ]
         }
     },
@@ -65,7 +66,7 @@ export default {
 </script>
 
 <template>
-    <h1><b>Select CPU shceduling algorithm</b></h1>
+    <h2><b>Select CPU shceduling algorithm</b></h2>
     <div class="app">
         <div class="container">
             <div class="algorithm-chooser">
@@ -160,8 +161,8 @@ button:active {
     display: none;
     position: absolute;
     left: 0;
-    top: 20;
-
+    font-size: 14px;
+    color: pink;
 }
 
 .wrapper {
@@ -200,8 +201,8 @@ button {
 input {
     font-size: 14px;
     max-width: 150px;
-    margin: 10px;
-    padding: 14px;
+    margin: 5px;
+    padding: 10px;
     border: 1px solid #42b883;
     border-radius: 22px;
 }
