@@ -93,7 +93,7 @@ export default {
             </div>
         </div>
         <div class="chart">
-            <ChartComponent :inputProcesses="processes" :isProcessStarted="isProcessStarted" />
+            <ChartComponent :selectedAlgorithm="selectedAlgorithm" :inputProcesses="processes" :isProcessStarted="isProcessStarted" />
         </div>
     </div>
 
