@@ -104,6 +104,7 @@ export default {
   border: 2px solid #42b883;
   text-align: center;
   border-radius: 12px;
+  max-height: 60%;
 }
 
 .running-process {
