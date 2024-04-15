@@ -6,7 +6,6 @@ class Job {
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
     }
-    
 }
 
 function shortestJobFirst(processes) {
@@ -21,13 +20,11 @@ function shortestJobFirst(processes) {
 
     // min priority queue to get shortest job
     const readyJobs = new MinPriorityQueue(a => a.burstTime);
-    // PriorityQueue < Job > readyJobs = new PriorityQueue < Job > ((a, b) => a.burst - b.burst);
 
     let totalWaitTime = 0;
     let currentTime = jobs[0].arrivalTime;
-    let i = 0;
     let outputProcesses = [];
-    debugger;
+    let i = 0;
     while (i < n) {
         // add jobs that arrived before current time
         while (i < n && currentTime >= jobs[i].arrivalTime) {
@@ -65,6 +62,8 @@ function shortestJobFirst(processes) {
         totalWaitTime += waitingTime;
         currentTime += nextJob.burstTime;
     }
+    const averageWaitingTime = totalWaitTime/n;
+    // const averageTurnaroundTime = total
 
     return outputProcesses;
 

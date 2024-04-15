@@ -2,29 +2,18 @@
   <div v-if="isProcessStarted" class="parent">
     <div class="child">
       <h1>Completed</h1>
-    
-
       <div class="processes">
-        <div
-          v-for="(process, index) in completed"
-          :key="index"
-          class="process"
-          :style="{ backgroundColor: process.color }"
-        >
+        <div v-for="(process, index) in completed" :key="index" class="process"
+          :style="{ backgroundColor: process.color }">
           <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
         </div>
       </div>
     </div>
     <div class="child">
       <h1>Running</h1>
-
       <div class="processes">
-        <div
-          v-for="(process, index) in running"
-          :key="index"
-          class="process"
-          :style="{ backgroundColor: process.color }"
-        >
+        <div v-for="(process, index) in running" :key="index" class="process"
+          :style="{ backgroundColor: process.color }">
           <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
         </div>
       </div>
@@ -32,12 +21,8 @@
     <div class="child">
       <h1>Waiting</h1>
       <div class="processes">
-        <div
-          v-for="(process, index) in pending"
-          :key="index"
-          class="process"
-          :style="{ backgroundColor: process.color }"
-        >
+        <div v-for="(process, index) in pending" :key="index" class="process"
+          :style="{ backgroundColor: process.color }">
           <div class="label">{{ process.name }}: {{ process.burstTime }}</div>
         </div>
       </div>
@@ -74,16 +59,16 @@ export default {
   methods: {
     generateRandomColor() {
       var letters = '0123456789ABCDEF'.split('');
-     var color = '#';
-     for (var i = 0; i < 6; i++) {
-         color += letters[Math.round(Math.random() * 15)];
-     }
-     return color;
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.round(Math.random() * 15)];
+      }
+      return color;
     },
     resetCurrents() {
-      this.pending=[];
-      this.running=[];
-      this.completed=[];
+      this.pending = [];
+      this.running = [];
+      this.completed = [];
     },
     runFCFS() {
       let outputProcesses = [];
@@ -92,8 +77,8 @@ export default {
       } else if (this.selectedAlgorithm === "SJF") {
         outputProcesses = shortestJobFirst(this.inputProcesses);
       }
-      else if(this.selectedAlgorithm==="Round Robin"){
-        outputProcesses = calculateOutputForRR(this.inputProcesses,this.quantum);        
+      else if (this.selectedAlgorithm === "Round Robin") {
+        // outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum);
 
       }
       this.pending = [...outputProcesses];
@@ -114,7 +99,7 @@ export default {
           process.width = process.burstTime * 10;
           this.completed.push(process);
           currentTime = Math.max(currentTime, arrivalDelay) + process.burstTime;
-          if(this.completed.length === outputProcesses.length){
+          if (this.completed.length === outputProcesses.length) {
             this.running = [];
           }
         }, (process.waitingTime + process.burstTime) * 1000);

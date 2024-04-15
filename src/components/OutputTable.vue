@@ -28,11 +28,9 @@ export default {
       switch (this.selectedAlgorithm) {
         case "FCFS":
           this.outputProcesses = calculateOutputForFCFS(this.processes);
-          this.sortOutputProcesses();
           break;
         case "SJF":
           this.outputProcesses = calculateOutputForSJF(this.processes);
-          this.sortOutputProcesses();
           break;
         case "Priority Scheduling":
           this.outputProcesses = calculateOutputForPriorityScheduling(
@@ -45,25 +43,11 @@ export default {
           break;
       }
     },
-    sortOutputProcesses() {
-      this.outputProcesses.sort((a, b) => a.id > b.id ? 1 : -1);
-    }
   },
 };
 </script>
 
 <template>
-  <!-- <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button>
-    
-    <div v-for="process in outputProcesses" :key="process.name" class="processes">
-        <p>Name: {{ process.name }}</p>
-        <p> Arrival Time: {{ process.arrivalTime }} </p>
-        <p> Burst Time: {{ process.burstTime }} </p>
-        <p> Waiting Time: {{ process.waitingTime }}</p>
-        <p> Turn Around Time: {{ process.turnAroundTime }} </p>
-        <p> Completion Time: {{ process.completionTime }} </p>
-    </div> -->
-  <!-- <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button> -->
   <table v-if="isProcessStarted">
     <thead>
       <tr>

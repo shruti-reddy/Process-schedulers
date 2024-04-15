@@ -40,7 +40,7 @@ export default {
             this.processes = [];
             for (let i = 0; i < this.numberOfProcesses; i++) {
                 this.processes.push({
-                    id: i,
+                    id: i+1,
                     name: `P${i + 1}`,
                     arrivalTime: "",
                     burstTime: "",
