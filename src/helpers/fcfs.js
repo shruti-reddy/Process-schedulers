@@ -1,4 +1,5 @@
-function calculateOutputForFCFS(processes) {
+function calculateOutputForFCFS(inputProcesses) {
+    const processes = inputProcesses.map(p => ({...p}));
     
     processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
     // Initialize variables to store waiting time, turnaround time, and completion time

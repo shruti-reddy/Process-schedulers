@@ -28,9 +28,11 @@ export default {
       switch (this.selectedAlgorithm) {
         case "FCFS":
           this.outputProcesses = calculateOutputForFCFS(this.processes);
+          this.sortOutputProcesses();
           break;
         case "SJF":
           this.outputProcesses = calculateOutputForSJF(this.processes);
+          this.sortOutputProcesses();
           break;
         case "Priority Scheduling":
           this.outputProcesses = calculateOutputForPriorityScheduling(
@@ -43,6 +45,9 @@ export default {
           break;
       }
     },
+    sortOutputProcesses() {
+      this.outputProcesses.sort((a, b) => a.id > b.id ? 1 : -1);
+    }
   },
 };
 </script>

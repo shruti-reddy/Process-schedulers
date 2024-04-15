@@ -37,32 +37,16 @@ export default {
     },
     watch: {
         numberOfProcesses: function () {
-            // this.processes = [];
-            // for (let i = 0; i < this.numberOfProcesses; i++) {
-            //     this.processes.push({
-            //         name: `P${i + 1}`,
-            //         arrivalTime: "",
-            //         burstTime: "",
-            //         priority: ""
-            //     })
-            // }
-            this.processes = [
-                { name: 'p1', arrivalTime: 2, burstTime: 15 },
-                { name: 'p2', arrivalTime: 1, burstTime: 15 },
-                { name: 'p3', arrivalTime: 6, burstTime: 14 },
-                { name: 'p4', arrivalTime: 0, burstTime: 10 },
-                { name: 'p5', arrivalTime: 3, burstTime: 18 },
-                { name: 'p6', arrivalTime: 2, burstTime: 15 },
-                { name: 'p7', arrivalTime: 1, burstTime: 15 },
-                { name: 'p8', arrivalTime: 6, burstTime: 14 },
-                { name: 'p9', arrivalTime: 0, burstTime: 10 },
-                { name: 'p10', arrivalTime: 3, burstTime: 18 },
-                { name: 'p11', arrivalTime: 2, burstTime: 15 },
-                { name: 'p12', arrivalTime: 1, burstTime: 15 },
-                { name: 'p13', arrivalTime: 6, burstTime: 14 },
-                { name: 'p14', arrivalTime: 0, burstTime: 10 },
-                { name: 'p15', arrivalTime: 3, burstTime: 18 },
-            ]
+            this.processes = [];
+            for (let i = 0; i < this.numberOfProcesses; i++) {
+                this.processes.push({
+                    id: i,
+                    name: `P${i + 1}`,
+                    arrivalTime: "",
+                    burstTime: "",
+                    priority: ""
+                })
+            }
         }
     },
     methods: {
@@ -156,6 +140,7 @@ export default {
 .algorithm-chooser {
     display: flex;
     flex-direction: row;
+    margin-bottom: 30px;
 }
 
 .chart {
@@ -188,7 +173,6 @@ button:disabled {
 }
 
 .wrapper {
-    margin-top: 30px;
     display: flex;
     flex-direction: column;
 }

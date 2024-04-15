@@ -1,10 +1,10 @@
 <template>
-  <div class="parent">
+  <div v-if="isProcessStarted" class="parent">
     <div class="child">
       <h1>Completed</h1>
     
 
-      <div v-if="isProcessStarted" class="processes">
+      <div class="processes">
         <div
           v-for="(process, index) in completed"
           :key="index"
@@ -18,7 +18,7 @@
     <div class="child">
       <h1>Running</h1>
 
-      <div v-if="isProcessStarted" class="processes">
+      <div class="processes">
         <div
           v-for="(process, index) in running"
           :key="index"
@@ -31,7 +31,7 @@
     </div>
     <div class="child">
       <h1>Waiting</h1>
-      <div v-if="isProcessStarted" class="processes">
+      <div class="processes">
         <div
           v-for="(process, index) in pending"
           :key="index"
@@ -131,7 +131,6 @@ export default {
   border: 2px solid #42b883;
   text-align: center;
   border-radius: 12px;
-  max-width: 95%;
 }
 
 .running-process {
