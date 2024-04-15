@@ -48,6 +48,7 @@
 <script>
 import calculateOutputForFCFS from "@/helpers/fcfs";
 import shortestJobFirst from "@/helpers/sjf";
+import calculateOutputForRR from "@/helpers/RoundRobin"
 
 export default {
   props: {
@@ -74,11 +75,15 @@ export default {
       return "#" + Math.floor(Math.random() * 16777215).toString(16);
     },
     runFCFS() {
-      let outputProcesses;
+      let outputProcesses = [];
       if (this.selectedAlgorithm === "FCFS") {
         outputProcesses = calculateOutputForFCFS(this.inputProcesses);
       } else if (this.selectedAlgorithm === "SJF") {
         outputProcesses = shortestJobFirst(this.inputProcesses);
+      }
+      else if(this.selectedAlgorithm==="Round Robin"){
+        outputProcesses = calculateOutputForRR(this.inputProcesses,this.quantum);        
+
       }
       this.pending = [...outputProcesses];
 

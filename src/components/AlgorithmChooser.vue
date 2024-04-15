@@ -31,6 +31,7 @@ export default {
             processes: [],
             numberOfProcesses: '',
             isProcessStarted: false,
+            quantum: 0,
         }
     },
     watch: {
@@ -80,6 +81,10 @@ export default {
                 <div class="flex-row">
                     <label>Enter number of processes to run</label>
                     <input name="totalProcess" class="abc" v-model="numberOfProcesses"></input>
+                    <label v-if="selectedAlgorithm === 'Round Robin'">Quantum</label>
+                    <input v-if="selectedAlgorithm === 'Round Robin'"placeholder="Enter time Quantum" 
+                        v-model="quantum" type="number"></input>
+
                 </div>
                 <div v-for="process in processes" :key="process.name" class="flex-column">
                     <div class="processes">
@@ -90,7 +95,7 @@ export default {
                             v-model="process.priority" type="number"></input>
                     </div>
                 </div>
-                <OutputTable :algorithm="selectedAlgorithm" :processes="processes" @process-started="processStarted" />
+                <OutputTable :algorithm="selectedAlgorithm" :quantum=Number(quantum) :processes="processes" @process-started="processStarted" />
             </div>
         </div>
         <div class="chart">
