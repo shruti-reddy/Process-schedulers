@@ -73,11 +73,12 @@ export default {
   },
   methods: {
     generateRandomColor() {
-      let randomColor;
-    do {
-        randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-    } while (randomColor === "#ffffff");
-    return randomColor;
+      var letters = '0123456789ABCDEF'.split('');
+     var color = '#';
+     for (var i = 0; i < 6; i++) {
+         color += letters[Math.round(Math.random() * 15)];
+     }
+     return color;
     },
     resetCurrents() {
       this.pending=[];
