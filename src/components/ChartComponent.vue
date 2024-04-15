@@ -38,7 +38,7 @@
           class="process"
           :style="{ backgroundColor: process.color }"
         >
-          <div class="label">{{ process.name }}</div>
+          <div class="label">{{ process.name }}: {{ process.burstTime }}</div>
         </div>
       </div>
     </div>
@@ -66,6 +66,7 @@ export default {
   watch: {
     isProcessStarted: function (newVal) {
       if (newVal) {
+        this.resetCurrents();
         this.runFCFS();
       }
     },
@@ -73,6 +74,11 @@ export default {
   methods: {
     generateRandomColor() {
       return "#" + Math.floor(Math.random() * 16777215).toString(16);
+    },
+    resetCurrents() {
+      this.pending=[];
+      this.running=[];
+      this.completed=[];
     },
     runFCFS() {
       let outputProcesses = [];
@@ -115,7 +121,6 @@ export default {
 
 <style scoped>
 .parent {
-  height: 100%;
   display: flex;
   flex-direction: row;
   border: 2px solid #42b883;

@@ -5,20 +5,27 @@ import calculateOutputForRR from "@/helpers/RoundRobin";
 export default {
   name: "output-table",
   props: {
-    algorithm: String,
+    selectedAlgorithm: String,
     processes: Array,
     quantum: Number,
+    isProcessStarted: Boolean,
   },
   emits: ["processStarted"],
   data() {
     return {
       outputProcesses: [],
-      isProcessStarted: false,
     };
+  },
+  watch: {
+    isProcessStarted: function (newVal) {
+      if (newVal) {
+        this.calculateOutputs();
+      }
+    },
   },
   methods: {
     calculateOutputs() {
-      switch (this.algorithm) {
+      switch (this.selectedAlgorithm) {
         case "FCFS":
           this.outputProcesses = calculateOutputForFCFS(this.processes);
           break;
@@ -36,11 +43,6 @@ export default {
           break;
       }
     },
-    startClicked() {
-      this.isProcessStarted = true;
-      this.calculateOutputs();
-      this.$emit("processStarted", true);
-    },
   },
 };
 </script>
@@ -56,7 +58,7 @@ export default {
         <p> Turn Around Time: {{ process.turnAroundTime }} </p>
         <p> Completion Time: {{ process.completionTime }} </p>
     </div> -->
-  <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button>
+  <!-- <button v-on:click="startClicked">Start {{ algorithm }} algorithm</button> -->
   <table v-if="isProcessStarted">
     <thead>
       <tr>

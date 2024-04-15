@@ -32,6 +32,7 @@ export default {
             numberOfProcesses: '',
             isProcessStarted: false,
             quantum: 0,
+            isStartedDisabled: false,
         }
     },
     watch: {
@@ -51,6 +52,16 @@ export default {
                 { name: 'p3', arrivalTime: 6, burstTime: 14 },
                 { name: 'p4', arrivalTime: 0, burstTime: 10 },
                 { name: 'p5', arrivalTime: 3, burstTime: 18 },
+                { name: 'p6', arrivalTime: 2, burstTime: 15 },
+                { name: 'p7', arrivalTime: 1, burstTime: 15 },
+                { name: 'p8', arrivalTime: 6, burstTime: 14 },
+                { name: 'p9', arrivalTime: 0, burstTime: 10 },
+                { name: 'p10', arrivalTime: 3, burstTime: 18 },
+                { name: 'p11', arrivalTime: 2, burstTime: 15 },
+                { name: 'p12', arrivalTime: 1, burstTime: 15 },
+                { name: 'p13', arrivalTime: 6, burstTime: 14 },
+                { name: 'p14', arrivalTime: 0, burstTime: 10 },
+                { name: 'p15', arrivalTime: 3, burstTime: 18 },
             ]
         }
     },
@@ -58,9 +69,11 @@ export default {
         selectedAlgorithmChanged(algo) {
             this.selectedAlgorithm = algo.title;
             this.isProcessStarted = false;
+            this.isStartedDisabled = false;
         },
-        processStarted(value) {
-            this.isProcessStarted = value;
+        startClicked() {
+            this.isProcessStarted = true;
+            this.isStartedDisabled = true;
         }
     }
 }
@@ -95,11 +108,12 @@ export default {
                             v-model="process.priority" type="number"></input>
                     </div>
                 </div>
-                <OutputTable :algorithm="selectedAlgorithm" :quantum=Number(quantum) :processes="processes" @process-started="processStarted" />
+                <button :disabled="isStartedDisabled" v-on:click="startClicked">Start {{ selectedAlgorithm }} algorithm</button>
             </div>
         </div>
         <div class="chart">
             <ChartComponent :selectedAlgorithm="selectedAlgorithm" :inputProcesses="processes" :isProcessStarted="isProcessStarted" />
+            <OutputTable :selectedAlgorithm="selectedAlgorithm" :quantum=Number(quantum) :processes="processes" :isProcessStarted="isProcessStarted" />
         </div>
     </div>
 
@@ -141,7 +155,6 @@ export default {
 
 .algorithm-chooser {
     display: flex;
-    flex: 1;
     flex-direction: row;
 }
 
@@ -160,6 +173,10 @@ export default {
 
 button:active {
     background-color: blue;
+}
+
+button:disabled {
+    background-color: lightgray;
 }
 
 .description {
@@ -206,7 +223,7 @@ button {
 input {
     font-size: 14px;
     max-width: 150px;
-    margin: 5px;
+    margin: 10px;
     padding: 10px;
     border: 1px solid #42b883;
     border-radius: 22px;
