@@ -1,44 +1,45 @@
 <template>
   <div class="parent">
-    <div>
+    <div class="child">
       <h1>Completed</h1>
-    </div>
+    
 
-    <div v-if="isProcessStarted" class="processes">
-      <div
-        v-for="(process, index) in completed"
-        :key="index"
-        class="process"
-        :style="{ width: process.width + 'px', backgroundColor: process.color }"
-      >
-        <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
+      <div v-if="isProcessStarted" class="processes">
+        <div
+          v-for="(process, index) in completed"
+          :key="index"
+          class="process"
+          :style="{ backgroundColor: process.color }"
+        >
+          <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
+        </div>
       </div>
     </div>
-    <div>
+    <div class="child">
       <h1>Running</h1>
-    </div>
 
-    <div v-if="isProcessStarted" class="running-processes">
-      <div
-        v-for="(process, index) in running"
-        :key="index"
-        class="process"
-        :style="{ width: process.width + 'px', backgroundColor: process.color }"
-      >
-        <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
+      <div v-if="isProcessStarted" class="processes">
+        <div
+          v-for="(process, index) in running"
+          :key="index"
+          class="process"
+          :style="{ backgroundColor: process.color }"
+        >
+          <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
+        </div>
       </div>
     </div>
-    <div>
+    <div class="child">
       <h1>Waiting</h1>
-    </div>
-    <div v-if="isProcessStarted" class="processes">
-      <div
-        v-for="(process, index) in pending"
-        :key="index"
-        class="process"
-        :style="{ width: process.width + 'px', backgroundColor: process.color }"
-      >
-        <div class="label">{{ process.name }}</div>
+      <div v-if="isProcessStarted" class="processes">
+        <div
+          v-for="(process, index) in pending"
+          :key="index"
+          class="process"
+          :style="{ backgroundColor: process.color }"
+        >
+          <div class="label">{{ process.name }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -87,17 +88,20 @@ export default {
       });
 
       let currentTime = 0;
-      outputProcesses.forEach((process) => {
+      outputProcesses.forEach((process, index) => {
         const arrivalDelay = process.arrivalTime;
-        console.log()
         setTimeout(() => {
-          this.pending = this.pending.filter((p) => p.name != process.name);
-          debugger;
           this.running = [process];
+          this.pending = this.pending.filter((p) => p.name != process.name);
+        }, (process.waitingTime) * 1000)
+        setTimeout(() => {
           process.width = process.burstTime * 10;
           this.completed.push(process);
           currentTime = Math.max(currentTime, arrivalDelay) + process.burstTime;
-        }, process.waitingTime * 1000);
+          if(this.completed.length === outputProcesses.length){
+            this.running = [];
+          }
+        }, (process.waitingTime + process.burstTime) * 1000);
       });
     },
   },
@@ -108,7 +112,7 @@ export default {
 .parent {
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   border: 2px solid #42b883;
   text-align: center;
   border-radius: 12px;
@@ -124,10 +128,12 @@ export default {
 
 .processes {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  height: 150px;
+  min-height: 150px;
   border: 2px solid #42b883;
   margin: 5px;
   border-radius: 12px;
@@ -136,6 +142,7 @@ export default {
 .process {
   height: 30px;
   margin-right: 5px;
+  width: 95%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,6 +150,10 @@ export default {
   margin: 5px;
   background-color: white;
   /* transition: 1s linear;  */
+}
+
+.child {
+  flex-grow: 1;
 }
 
 .label {
