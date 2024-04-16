@@ -14,6 +14,8 @@ export default {
   data() {
     return {
       outputProcesses: [],
+      averageWaitingTime: 0,
+      averageTurnAroundTime: 0,
     };
   },
   watch: {
@@ -27,19 +29,18 @@ export default {
     calculateOutputs() {
       switch (this.selectedAlgorithm) {
         case "FCFS":
-          this.outputProcesses = calculateOutputForFCFS(this.processes);
+          [this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime] = calculateOutputForFCFS(this.processes);
           break;
         case "SJF":
-          this.outputProcesses = calculateOutputForSJF(this.processes);
+          [this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime] = calculateOutputForSJF(this.processes);
           break;
         case "Priority Scheduling":
-          this.outputProcesses = calculateOutputForPriorityScheduling(
+          this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime = calculateOutputForPriorityScheduling(
             this.processes
           );
           break;
         case "Round Robin":
-          this.outputProcesses = calculateOutputForRR(this.processes, this.quantum);
-          debugger;
+          [this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime] = calculateOutputForRR(this.processes, this.quantum);
           break;
       }
     },
@@ -48,28 +49,34 @@ export default {
 </script>
 
 <template>
-  <table v-if="isProcessStarted">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Arrival Time</th>
-        <th>Burst Time</th>
-        <th>Waiting Time</th>
-        <th>Turn Around Time</th>
-        <th>Completion Time</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="process in outputProcesses" :key="process.name">
-        <td>{{ process.name }}</td>
-        <td>{{ process.arrivalTime }}</td>
-        <td>{{ process.burstTime }}</td>
-        <td>{{ process.waitingTime }}</td>
-        <td>{{ process.turnAroundTime }}</td>
-        <td>{{ process.completionTime }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div v-if="isProcessStarted">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Arrival Time</th>
+          <th>Burst Time</th>
+          <th>Waiting Time</th>
+          <th>Turn Around Time</th>
+          <th>Completion Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="process in outputProcesses" :key="process.name">
+          <td>{{ process.name }}</td>
+          <td>{{ process.arrivalTime }}</td>
+          <td>{{ process.burstTime }}</td>
+          <td>{{ process.waitingTime }}</td>
+          <td>{{ process.turnAroundTime }}</td>
+          <td>{{ process.completionTime }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="result">
+      <p>Average Waiting Time: {{ averageWaitingTime }} seconds</p>
+      <p>Average Turn around Time: {{ averageTurnAroundTime }} seconds</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -106,5 +113,15 @@ tr:nth-child(even) {
 
 tr:hover {
   background-color: #ddd;
+}
+
+.result {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  p {
+    width: 50%;
+  }
 }
 </style>

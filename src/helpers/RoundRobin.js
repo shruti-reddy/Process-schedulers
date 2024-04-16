@@ -1,5 +1,4 @@
 function calculateOutputForRR(processes, quantum) {
-    debugger;
     // Sort processes based on arrival time
     processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
@@ -10,11 +9,6 @@ function calculateOutputForRR(processes, quantum) {
     const completionTime = new Array(n).fill(0);
     const turnaroundTime = new Array(n).fill(0);
     let outputProcesses = [];
-
-    // Initialize burst remaining array
-    // for (let i = 0; i < n; i++) {
-    //     burstRemaining[i] = processes[i].burstTime;
-    // }
 
     let currentTime = processes[0].arrivalTime;
     const queue = [];
@@ -36,23 +30,10 @@ function calculateOutputForRR(processes, quantum) {
                     completionTime[i] = currentTime;
                     turnaroundTime[i] = completionTime[i] - processes[i].arrivalTime;
                 }
-
-                // Check for new arrivals
-                // for (let j = 0; j < n; j++) {
-                //     if (processes[j].arrivalTime <= currentTime && burstRemaining[j] > 0 && !queue.includes(j)) {
-                //         queue.push(j);
-                //     }
-                // }
             }
         }
 
         if (done) break;
-
-        // Rotate the queue
-        // if (queue.length > 0) {
-        //     let nextProcess = queue.shift();
-        //     queue.push(nextProcess);
-        // }
     }
 
     processes.forEach(process => {
@@ -67,17 +48,14 @@ function calculateOutputForRR(processes, quantum) {
         outputProcesses[i]['turnAroundTime'] = turnaroundTime[i]
     }
 
-   
-   
      // Calculate total waiting time and turnaround time
      let totalWaitingTime = waitingTime.reduce((acc, val) => acc + val, 0);
+     let averageWaitingTime = totalWaitingTime/n;
      let totalTurnaroundTime = turnaroundTime.reduce((acc, val) => acc + val, 0);
+     let averageTurnaroundTime = totalTurnaroundTime/n;
      
- 
      // Output results
-
-    
-     return outputProcesses;
+     return [outputProcesses, Math.round(averageWaitingTime), Math.round(averageTurnaroundTime)];
     }
     
     export default calculateOutputForRR;

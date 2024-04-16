@@ -55,6 +55,9 @@ export default {
         this.runFCFS();
       }
     },
+    selectedAlgorithm: function() {
+      this.resetCurrents();
+    }
   },
   methods: {
     generateRandomColor() {
@@ -73,9 +76,9 @@ export default {
     runFCFS() {
       let outputProcesses = [];
       if (this.selectedAlgorithm === "FCFS") {
-        outputProcesses = calculateOutputForFCFS(this.inputProcesses);
+        outputProcesses = calculateOutputForFCFS(this.inputProcesses)[0];
       } else if (this.selectedAlgorithm === "SJF") {
-        outputProcesses = shortestJobFirst(this.inputProcesses);
+        outputProcesses = shortestJobFirst(this.inputProcesses)[0];
       }
       else if (this.selectedAlgorithm === "Round Robin") {
         // outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum);

@@ -34,7 +34,7 @@ function calculateOutputForFCFS(inputProcesses) {
     const averageWaitingTime = totalWaitingTime / processes.length;
     const averageTurnaroundTime = totalTurnaroundTime / processes.length;
 
-    return outputProcesses; 
+    return [outputProcesses, Math.round(averageWaitingTime), Math.round(averageTurnaroundTime)]; 
 }
 
 export default calculateOutputForFCFS;

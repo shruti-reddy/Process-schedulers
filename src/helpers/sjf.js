@@ -22,6 +22,7 @@ function shortestJobFirst(processes) {
     const readyJobs = new MinPriorityQueue(a => a.burstTime);
 
     let totalWaitTime = 0;
+    let totalTurnaroundTime = 0;
     let currentTime = jobs[0].arrivalTime;
     let outputProcesses = [];
     let i = 0;
@@ -47,6 +48,7 @@ function shortestJobFirst(processes) {
         outputProcess.completionTime = completionTime;
         outputProcesses.push(outputProcess);
         totalWaitTime += waitingTime;
+        totalTurnaroundTime+=turnAroundTime;
         currentTime += nextJob.burstTime;
     }
     while (!readyJobs.isEmpty()) {
@@ -60,12 +62,13 @@ function shortestJobFirst(processes) {
         outputProcess.completionTime = completionTime;
         outputProcesses.push(outputProcess);
         totalWaitTime += waitingTime;
+        totalTurnaroundTime+=turnAroundTime;
         currentTime += nextJob.burstTime;
     }
     const averageWaitingTime = totalWaitTime/n;
-    // const averageTurnaroundTime = total
+    const averageTurnaroundTime = totalTurnaroundTime/n;
 
-    return outputProcesses;
+    return [outputProcesses, Math.round(averageWaitingTime), Math.round(averageTurnaroundTime)];
 
 }
 

@@ -22,12 +22,10 @@ export const useProcessStore = defineStore('processes', {
     },
   
     removeFromPending (process) {
-      debugger;
       this.pending = this.pending.filter(p => p.name == process.name);
     },
   
     removeFromRunning (process) {
-      debugger;
       this.running = this.running.filter(p => p.name == process.name);
     },
   },
