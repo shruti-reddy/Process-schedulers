@@ -34,7 +34,7 @@ function shortestJobFirst(processes) {
         }
         if (i < n && readyJobs.isEmpty()) {
             let nextJobsArrival = jobs[i].arrivalTime;
-            totalWaitTime += (nextJobsArrival - currentTime);
+            // totalWaitTime += (nextJobsArrival - currentTime);
             currentTime = nextJobsArrival;
             continue;
         }

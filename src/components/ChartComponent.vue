@@ -40,19 +40,27 @@ export default {
     inputProcesses: Array,
     isProcessStarted: Boolean,
     selectedAlgorithm: String,
+    quantum: Number,
   },
   data() {
     return {
+      outputProcesses: [],
       pending: [],
       running: [],
       completed: [],
+      timeOuts: [],
     };
   },
   watch: {
     isProcessStarted: function (newVal) {
       if (newVal) {
         this.resetCurrents();
-        this.runFCFS();
+        if(this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
+          this.runNonPreemptive();
+        }
+        else {
+          // this.runPreemptive()
+        }
       }
     },
     selectedAlgorithm: function() {
@@ -72,42 +80,77 @@ export default {
       this.pending = [];
       this.running = [];
       this.completed = [];
+      this.timeOuts.forEach(timeout => {
+        clearTimeout(timeout);
+      });
     },
-    runFCFS() {
-      let outputProcesses = [];
+    runNonPreemptive() {
       if (this.selectedAlgorithm === "FCFS") {
-        outputProcesses = calculateOutputForFCFS(this.inputProcesses)[0];
+        this.outputProcesses = calculateOutputForFCFS(this.inputProcesses)[0];
       } else if (this.selectedAlgorithm === "SJF") {
-        outputProcesses = shortestJobFirst(this.inputProcesses)[0];
+        this.outputProcesses = shortestJobFirst(this.inputProcesses)[0];
       }
       else if (this.selectedAlgorithm === "Round Robin") {
-        // outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum);
+        // this.outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum);
 
       }
-      this.pending = [...outputProcesses];
-
-      outputProcesses.forEach((process, index) => {
+      this.outputProcesses.forEach((process, index) => {
         process.width = process.burstTime * 10;
         process.color = this.generateRandomColor();
       });
 
-      let currentTime = 0;
-      outputProcesses.forEach((process, index) => {
-        const arrivalDelay = process.arrivalTime;
-        setTimeout(() => {
-          this.running = [process];
-          this.pending = this.pending.filter((p) => p.name != process.name);
-        }, (process.waitingTime) * 1000)
-        setTimeout(() => {
-          process.width = process.burstTime * 10;
-          this.completed.push(process);
-          currentTime = Math.max(currentTime, arrivalDelay) + process.burstTime;
-          if (this.completed.length === outputProcesses.length) {
-            this.running = [];
-          }
-        }, (process.waitingTime + process.burstTime) * 1000);
+      this.outputProcesses.forEach((process, index) => {
+        this.simulatePending(process);
+        this.simulateRunning(process);
+        this.simulateCompleted(process);
       });
     },
+
+    simulatePending(process) {
+      const t = setTimeout(() => {
+        this.pending.push(process);
+      }, process.arrivalTime * 1000);
+      this.timeOuts.push(t)
+    },
+
+    simulateRunning(process) {
+      const t = setTimeout(() => {
+          this.running = [process];
+          this.pending = this.pending.filter((p) => p.name != process.name);
+        }, (process.arrivalTime + process.waitingTime) * 1000);
+      this.timeOuts.push(t);
+    },
+
+    simulateCompleted(process) {
+      const t = setTimeout(() => {
+          process.width = process.burstTime * 10;
+          this.running=[];
+          this.completed.push(process);
+          if (this.completed.length === this.outputProcesses.length) {
+            this.running = [];
+          }
+        }, (process.arrivalTime + process.waitingTime + process.burstTime) * 1000);
+      this.timeOuts.push(t);
+    },
+
+    runPreemptive() {
+      // clone all the input processes into a new array
+      const processes = this.inputProcesses.map(p => ({...p}));
+      // while loop until all the processes are completed execution
+      while(processes.length() > 0) {
+        // for each process in the order of their arrival remove from pending and push to running
+        this.inputProcesses.forEach(process => {
+          this.pending.push(process);
+        });
+        // else push it back to pending with updated burst time
+        // if the process completes, push to completed and remove from new array
+        this.inputProcesses.forEach(process => {
+          setTimeout(()=> {
+            this.pending.filter()
+          }, quantum);
+        });
+      }
+    }
   },
 };
 </script>

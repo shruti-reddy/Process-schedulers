@@ -20,11 +20,11 @@ export default {
                 },
                 {
                     title: "Round Robin",
-                    description: "The round robin algorithm schedules the processes in the order of their arrival in the ready queue.",
+                    description: "The round robin algorithm schedules the processes in cyclic manner with each process getting small unit of CPU time.",
                 },
                 {
                     title: 'Priority Scheduling',
-                    description: "The priority scheduling algorithm schedules the processes in the order of their arrival in the ready queue.",
+                    description: "The priority scheduling algorithm schedules the processes according to the priority assigned to each process.",
                 }
             ],
             selectedAlgorithm: '',
