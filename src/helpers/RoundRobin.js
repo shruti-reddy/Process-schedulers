@@ -30,10 +30,22 @@ function calculateOutputForRR(processes, quantum) {
                     completionTime[i] = currentTime;
                     turnaroundTime[i] = completionTime[i] - processes[i].arrivalTime;
                 }
+
+                // Check for new arrivals
+                for (let j = 0; j < n; j++) {
+                    if (processes[j].arrivalTime <= currentTime && burstRemaining[j] > 0 && !queue.includes(j)) {
+                        queue.push(processes[j]);
+                    }
+                }
             }
         }
 
         if (done) break;
+        // Rotate the queue
+        if (queue.length > 0) {
+            let nextProcess = queue.shift();
+            queue.push(nextProcess);
+        }
     }
 
     processes.forEach(process => {
@@ -55,7 +67,7 @@ function calculateOutputForRR(processes, quantum) {
      let averageTurnaroundTime = totalTurnaroundTime/n;
      
      // Output results
-     return [outputProcesses, Math.round(averageWaitingTime), Math.round(averageTurnaroundTime)];
+     return [outputProcesses, Math.round(averageWaitingTime), Math.round(averageTurnaroundTime), queue];
     }
     
     export default calculateOutputForRR;

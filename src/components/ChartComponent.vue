@@ -12,9 +12,9 @@
     <div class="child">
       <h1>Running</h1>
       <div class="processes">
-        <div v-for="(process, index) in running" :key="index" class="process"
-          :style="{ backgroundColor: process.color }">
-          <div class="label">{{ process.name }} : {{ process.burstTime }}</div>
+        <div v-for="(process, index) in running" :key="index" id="running-process" class="runningProcess"
+          :style="{ backgroundColor: process.color, width: '0%' }"> {{ process.name }}: 0%
+          <!-- <div class="label">{{ process.name }} : {{ process.burstTime }}</div> -->
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@ export default {
     isProcessStarted: function (newVal) {
       if (newVal) {
         this.resetCurrents();
-        if(this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
+        if (this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
           this.runNonPreemptive();
         }
         else {
@@ -63,7 +63,7 @@ export default {
         }
       }
     },
-    selectedAlgorithm: function() {
+    selectedAlgorithm: function () {
       this.resetCurrents();
     }
   },
@@ -90,16 +90,12 @@ export default {
       } else if (this.selectedAlgorithm === "SJF") {
         this.outputProcesses = shortestJobFirst(this.inputProcesses)[0];
       }
-      else if (this.selectedAlgorithm === "Round Robin") {
-        // this.outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum);
-
-      }
-      this.outputProcesses.forEach((process, index) => {
+      this.outputProcesses.forEach((process) => {
         process.width = process.burstTime * 10;
         process.color = this.generateRandomColor();
       });
 
-      this.outputProcesses.forEach((process, index) => {
+      this.outputProcesses.forEach((process) => {
         this.simulatePending(process);
         this.simulateRunning(process);
         this.simulateCompleted(process);
@@ -115,41 +111,45 @@ export default {
 
     simulateRunning(process) {
       const t = setTimeout(() => {
-          this.running = [process];
-          this.pending = this.pending.filter((p) => p.name != process.name);
-        }, (process.arrivalTime + process.waitingTime) * 1000);
+        this.running = [process];
+        this.pending = this.pending.filter((p) => p.name != process.name);
+        this.$nextTick(() => {
+          const runningProcess = document.getElementById("running-process");
+          const id = setInterval(frame, 1000);
+          const time = process.burstTime;
+          let width = 0;
+          function frame() {
+            if (width >= time) {
+              clearInterval(id);
+            } else {
+              width++;
+              const widthPercentage = (100 * width) / time + '%';
+              runningProcess.style.width = widthPercentage;
+              runningProcess.innerHTML = process.name + ': ' + Math.round((100 * width) / time) + '%';
+            }
+          }
+        })
+      }, (process.arrivalTime + process.waitingTime) * 1000);
       this.timeOuts.push(t);
     },
 
     simulateCompleted(process) {
       const t = setTimeout(() => {
-          process.width = process.burstTime * 10;
-          this.running=[];
-          this.completed.push(process);
-          if (this.completed.length === this.outputProcesses.length) {
-            this.running = [];
-          }
-        }, (process.arrivalTime + process.waitingTime + process.burstTime) * 1000);
+        process.width = process.burstTime * 10;
+        this.running = [];
+        this.completed.push(process);
+        if (this.completed.length === this.outputProcesses.length) {
+          this.running = [];
+        }
+      }, (process.arrivalTime + process.waitingTime + process.burstTime) * 1000);
       this.timeOuts.push(t);
     },
 
     runPreemptive() {
-      // clone all the input processes into a new array
-      const processes = this.inputProcesses.map(p => ({...p}));
-      // while loop until all the processes are completed execution
-      while(processes.length() > 0) {
-        // for each process in the order of their arrival remove from pending and push to running
-        this.inputProcesses.forEach(process => {
-          this.pending.push(process);
-        });
-        // else push it back to pending with updated burst time
-        // if the process completes, push to completed and remove from new array
-        this.inputProcesses.forEach(process => {
-          setTimeout(()=> {
-            this.pending.filter()
-          }, quantum);
-        });
-      }
+      this.inputProcesses.forEach(process => {
+        this.simulatePending(process);
+        setTimeout(() => { }, this.quantum * 1000)
+      });
     }
   },
 };
@@ -165,17 +165,24 @@ export default {
 }
 
 .running-process {
+  margin: 5px;
   width: 100%;
   height: 150px;
   border: 2px solid #42b883;
   align-items: center;
 }
 
+.runningProcess {
+  color: white;
+  margin: 5px;
+  border-radius: 8px;
+}
+
 .processes {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   margin-top: 20px;
   margin-bottom: 20px;
   min-height: 150px;
