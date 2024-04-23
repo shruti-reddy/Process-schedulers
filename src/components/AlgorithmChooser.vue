@@ -30,9 +30,9 @@ export default {
             selectedAlgorithm: '',
             processes: [],
             numberOfProcesses: '',
-            isProcessStarted: false,
+            isProcessRunning: false,
+            isStartDisabled: false,
             quantum: 0,
-            isStartedDisabled: false,
         }
     },
     watch: {
@@ -52,12 +52,16 @@ export default {
     methods: {
         selectedAlgorithmChanged(algo) {
             this.selectedAlgorithm = algo.title;
-            this.isProcessStarted = false;
-            this.isStartedDisabled = false;
+            this.isStartDisabled = false;
+            this.isProcessRunning = false;
         },
         startClicked() {
-            this.isProcessStarted = true;
-            this.isStartedDisabled = true;
+            this.isProcessRunning = true;
+            this.isStartDisabled = true;
+        },
+        handleProcessCompleted() {
+            this.isProcessRunning = false;
+            this.isStartDisabled = false;
         }
     }
 }
@@ -92,15 +96,21 @@ export default {
                             v-model="process.priority" type="number"></input>
                     </div>
                 </div>
-                <button :disabled="isStartedDisabled" v-on:click="startClicked">Start {{ selectedAlgorithm }} algorithm</button>
+                <button :disabled="isStartDisabled" v-on:click="startClicked">Start {{ selectedAlgorithm }} algorithm</button>
             </div>
         </div>
         <div class="chart">
-            <ChartComponent :selectedAlgorithm="selectedAlgorithm" :inputProcesses="processes" :isProcessStarted="isProcessStarted" />
-            <OutputTable :selectedAlgorithm="selectedAlgorithm" :quantum=Number(quantum) :processes="processes" :isProcessStarted="isProcessStarted" />
+            <ChartComponent 
+                :selectedAlgorithm="selectedAlgorithm" 
+                :inputProcesses="processes"
+                :isProcessRunning="isProcessRunning"
+                v-on:process-running-completed="handleProcessCompleted"/>
+            <OutputTable :selectedAlgorithm="selectedAlgorithm" 
+                :quantum=Number(quantum) 
+                :processes="processes"
+                :isProcessRunning="isProcessRunning" />
         </div>
     </div>
-
 </template>
 
 <style>

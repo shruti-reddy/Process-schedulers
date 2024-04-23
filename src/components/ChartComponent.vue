@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isProcessStarted" class="parent">
+  <div v-if="outputProcesses.length>0" class="parent">
     <div class="child">
       <h1>Completed</h1>
       <div class="processes">
@@ -38,7 +38,7 @@ import calculateOutputForRR from "@/helpers/RoundRobin"
 export default {
   props: {
     inputProcesses: Array,
-    isProcessStarted: Boolean,
+    isProcessRunning: Boolean,
     selectedAlgorithm: String,
     quantum: Number,
   },
@@ -52,7 +52,7 @@ export default {
     };
   },
   watch: {
-    isProcessStarted: function (newVal) {
+    isProcessRunning: function (newVal) {
       if (newVal) {
         this.resetCurrents();
         if (this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
@@ -140,6 +140,7 @@ export default {
         this.completed.push(process);
         if (this.completed.length === this.outputProcesses.length) {
           this.running = [];
+          this.$emit('process-running-completed', true);
         }
       }, (process.arrivalTime + process.waitingTime + process.burstTime) * 1000);
       this.timeOuts.push(t);

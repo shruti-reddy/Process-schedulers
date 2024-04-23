@@ -11,10 +11,11 @@ class Job {
 function shortestJobFirst(processes) {
     const n = processes.length;
     if (n <= 1) {
-        processes[0].waitingTime = processes[0].arrivalTime;
-        processes[0].turnAroundTime = processes[0].burstTime;
-        processes[0].completionTime = processes[0].arrivalTime + processes[0].burstTime;
-        return [processes, 0, processes[0].turnAroundTime]
+        const outputProcess = {...processes[0]}
+        outputProcess.waitingTime = processes[0].arrivalTime;
+        outputProcess.turnAroundTime = processes[0].burstTime;
+        outputProcess.completionTime = processes[0].arrivalTime + processes[0].burstTime;
+        return [[outputProcess], 0, outputProcess.turnAroundTime]
     };
     let jobs = [];
     for (let i = 0; i < n; i++) {

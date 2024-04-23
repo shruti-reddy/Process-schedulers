@@ -8,7 +8,7 @@ export default {
     selectedAlgorithm: String,
     processes: Array,
     quantum: Number,
-    isProcessStarted: Boolean,
+    isProcessRunning: Boolean,
   },
   emits: ["processStarted"],
   data() {
@@ -19,7 +19,7 @@ export default {
     };
   },
   watch: {
-    isProcessStarted: function (newVal) {
+    isProcessRunning: function (newVal) {
       if (newVal) {
         this.calculateOutputs();
       }
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="isProcessStarted">
+  <div v-if="outputProcesses.length>0">
     <table>
       <thead>
         <tr>
