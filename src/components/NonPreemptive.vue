@@ -1,5 +1,5 @@
 <template>
-  <div v-if="outputProcesses.length>0" class="parent">
+  <div v-if="outputProcesses.length > 0" class="parent">
     <div class="child">
       <h1>Completed</h1>
       <div class="processes">
@@ -11,10 +11,13 @@
     </div>
     <div class="child">
       <h1>Running</h1>
-      <div class="processes">
-        <div v-for="(process, index) in running" :key="index" id="running-process" class="runningProcess"
-          :style="{ backgroundColor: process.color, width: '0%' }"> {{ process.name }}: 0%
-          <!-- <div class="label">{{ process.name }} : {{ process.burstTime }}</div> -->
+      <div class="runningProcesses">
+        <div v-for="(process, index) in running" :key="index">
+          <div class="runningLabel" :style="{ backgroundColor: process.color }"> Process - {{ process.name }}</div>
+          <div class="runningLabel" :style="{ backgroundColor: process.color }"> Burst Time - {{ process.burstTime }}
+          </div>
+          <div class="runningProcess" id="running-process" :style="{ backgroundColor: process.color, width: '0%' }">0%
+          </div>
         </div>
       </div>
     </div>
@@ -33,14 +36,12 @@
 <script>
 import calculateOutputForFCFS from "@/helpers/fcfs";
 import shortestJobFirst from "@/helpers/sjf";
-import calculateOutputForRR from "@/helpers/RoundRobin"
 
 export default {
   props: {
     inputProcesses: Array,
-    isProcessRunning: Boolean,
     selectedAlgorithm: String,
-    quantum: Number,
+    isProcessRunning: Boolean
   },
   data() {
     return {
@@ -55,12 +56,7 @@ export default {
     isProcessRunning: function (newVal) {
       if (newVal) {
         this.resetCurrents();
-        if (this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
-          this.runNonPreemptive();
-        }
-        else {
-          // this.runPreemptive()
-        }
+        this.runNonPreemptive();
       }
     },
     selectedAlgorithm: function () {
@@ -125,7 +121,7 @@ export default {
               width++;
               const widthPercentage = (100 * width) / time + '%';
               runningProcess.style.width = widthPercentage;
-              runningProcess.innerHTML = process.name + ': ' + Math.round((100 * width) / time) + '%';
+              runningProcess.innerHTML = Math.round((100 * width) / time) + '%';
             }
           }
         })
@@ -145,13 +141,6 @@ export default {
       }, (process.arrivalTime + process.waitingTime + process.burstTime) * 1000);
       this.timeOuts.push(t);
     },
-
-    runPreemptive() {
-      this.inputProcesses.forEach(process => {
-        this.simulatePending(process);
-        setTimeout(() => { }, this.quantum * 1000)
-      });
-    }
   },
 };
 </script>
@@ -165,25 +154,11 @@ export default {
   border-radius: 12px;
 }
 
-.running-process {
-  margin: 5px;
-  width: 100%;
-  height: 150px;
-  border: 2px solid #42b883;
-  align-items: center;
-}
-
-.runningProcess {
-  color: white;
-  margin: 5px;
-  border-radius: 8px;
-}
-
 .processes {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
+  align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
   min-height: 150px;
@@ -202,7 +177,22 @@ export default {
   border-radius: 5px;
   margin: 5px;
   background-color: white;
-  /* transition: 1s linear;  */
+}
+
+.runningProcesses {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  min-height: 150px;
+  border: 2px solid #42b883;
+  margin: 5px;
+  border-radius: 12px;
+}
+
+.runningProcess {
+  margin: auto;
+  color: white;
+  margin: 5px;
+  border-radius: 5px;
 }
 
 .child {
@@ -211,6 +201,13 @@ export default {
 
 .label {
   color: white;
+}
+
+.runningLabel {
+  margin: 5px 2px;
+  height: 25px;
+  color: white;
+  border-radius: 5px;
 }
 
 button {

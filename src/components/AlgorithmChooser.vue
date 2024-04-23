@@ -1,11 +1,13 @@
 <script>
 import OutputTable from "../components/OutputTable.vue";
-import ChartComponent from '../components/ChartComponent.vue';
+import NonPreemptive from '../components/NonPreemptive.vue';
+import Preemptive from "./Preemptive.vue";
 export default {
     name: 'algorithm-chooser',
     components: {
         OutputTable,
-        ChartComponent
+        Preemptive,
+        NonPreemptive
     },
     data() {
         return {
@@ -47,6 +49,14 @@ export default {
                     priority: ""
                 })
             }
+        }
+    },
+    computed: {
+        isPreemptive() {
+            if(this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
+                return false;
+            }
+            return true;
         }
     },
     methods: {
@@ -100,7 +110,8 @@ export default {
             </div>
         </div>
         <div class="chart">
-            <ChartComponent 
+            <Preemptive v-if="isPreemptive"/>
+            <NonPreemptive v-if="!isPreemptive"
                 :selectedAlgorithm="selectedAlgorithm" 
                 :inputProcesses="processes"
                 :isProcessRunning="isProcessRunning"
