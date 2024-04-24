@@ -36,7 +36,7 @@ export default {
           [this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime] = calculateOutputForSJF(this.processes);
           break;
         case "Priority Scheduling":
-          this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime = calculateOutputForPriorityScheduling(
+          [this.outputProcesses, this.averageWaitingTime, this.averageTurnAroundTime] = calculateOutputForPriorityScheduling(
             this.processes
           );
           break;
