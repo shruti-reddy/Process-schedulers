@@ -111,10 +111,10 @@ export default {
         this.pending = this.pending.filter((p) => p.name != process.name);
         this.$nextTick(() => {
           const runningProcess = document.getElementById("running-process");
-          const id = setInterval(frame, 1000);
+          const id = setInterval(progressWidth, 1000);
           const time = process.burstTime;
           let width = 0;
-          function frame() {
+          function progressWidth() {
             if (width >= time) {
               clearInterval(id);
             } else {
