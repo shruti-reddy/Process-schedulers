@@ -2,7 +2,7 @@
 import calculateOutputForFCFS from "@/helpers/fcfs";
 import calculateOutputForSJF from "@/helpers/sjf";
 import calculateOutputForRR from "@/helpers/RoundRobin";
-import calculateOutputForPriorityScheduling from "@/helpers/fcfs";
+import calculateOutputForPriorityScheduling from "@/helpers/PriorityScheduling";
 export default {
   name: "output-table",
   props: {
