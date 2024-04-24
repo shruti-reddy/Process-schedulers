@@ -25,6 +25,9 @@ export default {
         this.calculateOutputs();
       }
     },
+    selectedAlgorithm: function() {
+      this.outputProcesses = [];
+    }
   },
   methods: {
     calculateOutputs() {

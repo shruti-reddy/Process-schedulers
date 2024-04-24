@@ -46,7 +46,7 @@ function calculateOutputForPriority(inputProcesses) {
       const endTime = currentTime;
   
       priorityExecutionArray.push({
-        process: `P${currentProcess}`,
+        name: `P${currentProcess}`,
         arrivalTime: processes[nextProcessIndex].arrivalTime,
         burstTime: processes[nextProcessIndex].burstTime,
         startTime,

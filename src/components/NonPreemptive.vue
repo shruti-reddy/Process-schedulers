@@ -76,6 +76,7 @@ export default {
       this.pending = [];
       this.running = [];
       this.completed = [];
+      this.outputProcesses = [];
       this.timeOuts.forEach(timeout => {
         clearTimeout(timeout);
       });
@@ -87,7 +88,6 @@ export default {
         this.outputProcesses = shortestJobFirst(this.inputProcesses)[0];
       }
       this.outputProcesses.forEach((process) => {
-        process.width = process.burstTime * 10;
         process.color = this.generateRandomColor();
       });
 
@@ -131,7 +131,6 @@ export default {
 
     simulateCompleted(process) {
       const t = setTimeout(() => {
-        process.width = process.burstTime * 10;
         this.running = [];
         this.completed.push(process);
         if (this.completed.length === this.outputProcesses.length) {

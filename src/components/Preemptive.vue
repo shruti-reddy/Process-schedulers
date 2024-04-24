@@ -1,5 +1,5 @@
 <template>
-    <div class="parent">
+    <div v-if="outputProcesses.length>0" class="parent">
         <div class="child">
             <h1>Completed</h1>
             <div class="processes">
@@ -18,7 +18,7 @@
                     <div class="runningLabel" :style="{ backgroundColor: process.color }"> Burst Time - {{
                         process.burstTime }}
                     </div>
-                    <div class="runningProcess" id="running-process"
+                    <div class="runningProcess" id="running-pp"
                         :style="{ backgroundColor: process.color, width: '0%' }">0%
                     </div>
                 </div>
@@ -28,8 +28,8 @@
             <h1>Waiting</h1>
             <div class="processes">
                 <div v-for="(process, index) in pending" :key="index" class="process"
-                    :style="{ backgroundColor: process.color }">
-                    <div class="label">{{ process.name }}: {{ process.burstTime }}</div>
+                    :style="{ backgroundColor: process.color, width: process.percentageCompleted }">
+                    <div class="label">{{ process.name }}: {{ process.burstTime }} : {{ process.endPercentage }}%</div>
                 </div>
             </div>
         </div>
@@ -37,12 +37,14 @@
 </template>
 
 <script>
-import calculateOutputForRR from "@/helpers/RoundRobin"
+import calculateOutputForRR from "@/helpers/RoundRobin";
+import calculateOutputForPriorityScheduling from "@/helpers/PriorityScheduling";
 export default {
     props: {
         inputProcesses: Array,
         selectedAlgorithm: String,
-        isProcessRunning: Boolean
+        isProcessRunning: Boolean,
+        quantum: Number,
     },
     data() {
         return {
@@ -51,13 +53,15 @@ export default {
             running: [],
             completed: [],
             timeOuts: [],
+            assignedColors: [],
+            pendingNames: [],
         }
     },
     watch: {
         isProcessRunning: function (newVal) {
             if (newVal) {
                 this.resetCurrents();
-                // this.runPreemptive();
+                this.runPreemptive();
             }
         },
         selectedAlgorithm: function () {
@@ -65,41 +69,53 @@ export default {
         }
     },
     methods: {
+        generateRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.round(Math.random() * 15)];
+            }
+            return color;
+        },
+        resetCurrents() {
+            console.log('running selected changed')
+            this.pending = [];
+            this.running = [];
+            this.completed = [];
+            this.outputProcesses = [];
+            this.timeOuts.forEach(timeout => {
+                clearTimeout(timeout);
+            });
+        },
         runPreemptive() {
-            this.outputProcesses = [
-                {
-                    name: 'P1',
-                    arrivalTime: 0,
-                    burstTime: 4,
-                    waitingTime: 0,
-                    timeRan: 2,
-                    percentageCompleted: 50
-                },
-                {
-                    name: 'P2',
-                    arrivalTime: 0,
-                    burstTime: 2,
-                    waitingTime: 2,
-                    timeRan: 2,
-                    percentageCompleted: 100
-                },
-                {
-                    name: 'P1',
-                    arrivalTime: 0,
-                    burstTime: 4,
-                    waitingTime: 4,
-                    timeRan: 2,
-                    percentageCompleted: 100
-                }];
+            if(this.selectedAlgorithm == 'Round Robin') {
+                this.outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum)[3];
+            }
+            else {
+                // this.outputProcesses = calculateOutputForPriorityScheduling(this.inputProcesses)[3];
+                this.outputProcesses = [];
+            }
+            console.log(this.outputProcesses);
+            this.outputProcesses.forEach((process) => {
+                if (process.name in this.assignedColors) {
+                    process.color = this.assignedColors[process.name]
+                }
+                process.color = this.generateRandomColor();
+                this.assignedColors[process.name] = process.color;
+            });
+
             this.outputProcesses.forEach(process => {
-                this.simulatePending(process);
+                // this.simulatePending(process);
                 this.simulateRunning(process);
+                this.simulateCompleted(process);
             })
         },
 
         simulatePending(process) {
+            if (this.pendingNames.includes(process.name)) return;
             const t = setTimeout(() => {
                 this.pending.push(process);
+                this.pendingNames.push(process.name)
             }, process.arrivalTime * 1000);
             this.timeOuts.push(t)
         },
@@ -109,35 +125,39 @@ export default {
                 this.running = [process];
                 this.pending = this.pending.filter((p) => p.name != process.name);
                 this.$nextTick(() => {
-                    const runningProcess = document.getElementById("running-process");
+                    const runningPp = document.getElementById("running-pp");
                     const id = setInterval(frame, 1000);
                     const time = process.burstTime;
-                    let width = 0;
+                    let x = process.burstTime / 100;
+                    let width = ((x) * process.endPercentage) - process.timeQuantum;
                     function frame() {
                         if (width >= time) {
                             clearInterval(id);
                         } else {
                             width++;
                             const widthPercentage = (100 * width) / time + '%';
-                            runningProcess.style.width = widthPercentage;
-                            runningProcess.innerHTML = Math.round((100 * width) / time) + '%';
+                            runningPp.style.width = widthPercentage;
+                            runningPp.innerHTML = Math.round((100 * width) / time) + '%';
                         }
                     }
                 })
-            }, (process.arrivalTime + process.waitingTime) * 1000);
+            }, (process.arrivalTime + process.startTime) * 1000);
             this.timeOuts.push(t);
         },
 
         simulateCompleted(process) {
             const t = setTimeout(() => {
-                process.width = process.burstTime * 10;
                 this.running = [];
+                if (process.endPercentage !== 100) {
+                    this.pending.push(process);
+                    return;
+                };
                 this.completed.push(process);
-                if (this.completed.length === this.outputProcesses.length) {
+                if (this.completed.length === this.inputProcesses.length) {
                     this.running = [];
                     this.$emit('process-running-completed', true);
                 }
-            }, (process.arrivalTime + process.waitingTime + process.timeRan) * 1000);
+            }, (process.arrivalTime + process.startTime + process.timeQuantum) * 1000);
             this.timeOuts.push(t);
         },
     },

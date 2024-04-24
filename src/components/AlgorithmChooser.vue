@@ -70,6 +70,7 @@ export default {
             this.isStartDisabled = true;
         },
         handleProcessCompleted() {
+            console.log('event emitted')
             this.isProcessRunning = false;
             this.isStartDisabled = false;
         }
@@ -110,7 +111,12 @@ export default {
             </div>
         </div>
         <div class="chart">
-            <Preemptive v-if="isPreemptive"/>
+            <Preemptive v-if="isPreemptive"
+                :selectedAlgorithm="selectedAlgorithm" 
+                :inputProcesses="processes"
+                :isProcessRunning="isProcessRunning"
+                :quantum=Number(quantum)
+                v-on:process-running-completed="handleProcessCompleted" />
             <NonPreemptive v-if="!isPreemptive"
                 :selectedAlgorithm="selectedAlgorithm" 
                 :inputProcesses="processes"

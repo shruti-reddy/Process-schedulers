@@ -34,7 +34,7 @@ function calculateOutputForRR(inputProcesses, quantum) {
         const endTime = currentTime;
         
         quantumExecutionArray.push({
-          process: `P${currentProcess}`,
+          name: `P${currentProcess}`,
           arrivalTime: processes[i].arrivalTime,
           burstTime: processes[i].burstTime,
           startTime,
