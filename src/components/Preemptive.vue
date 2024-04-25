@@ -29,7 +29,7 @@
             <div class="processes">
                 <div v-for="(process, index) in pending" :key="index" class="process"
                     :style="{ backgroundColor: process.color, width: process.percentageCompleted }">
-                    <div class="label">{{ process.name }}: {{ process.burstTime }} : {{ process.endPercentage }}%</div>
+                    <div class="label">{{ process.name }}: {{ process.burstTime }} : {{ process.percentageBeforeStart }}%</div>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@ export default {
             running: [],
             completed: [],
             timeOuts: [],
-            assignedColors: [],
+            assignedColors: {},
             pendingNames: [],
         }
     },
@@ -78,7 +78,6 @@ export default {
             return color;
         },
         resetCurrents() {
-            console.log('running selected changed')
             this.pending = [];
             this.running = [];
             this.completed = [];
@@ -92,31 +91,29 @@ export default {
                 this.outputProcesses = calculateOutputForRR(this.inputProcesses, this.quantum)[3];
             }
             else {
-                // this.outputProcesses = calculateOutputForPriorityScheduling(this.inputProcesses)[3];
-                this.outputProcesses = [];
+                this.outputProcesses = calculateOutputForPriorityScheduling(this.inputProcesses)[3];
             }
-            console.log(this.outputProcesses);
+
             this.outputProcesses.forEach((process) => {
                 if (process.name in this.assignedColors) {
                     process.color = this.assignedColors[process.name]
+                    return;
                 }
                 process.color = this.generateRandomColor();
                 this.assignedColors[process.name] = process.color;
             });
 
             this.outputProcesses.forEach(process => {
-                // this.simulatePending(process);
+                this.simulatePending(process);
                 this.simulateRunning(process);
                 this.simulateCompleted(process);
             })
         },
 
         simulatePending(process) {
-            if (this.pendingNames.includes(process.name)) return;
             const t = setTimeout(() => {
                 this.pending.push(process);
-                this.pendingNames.push(process.name)
-            }, process.arrivalTime * 1000);
+            }, (process.lastExecutionTime) * 1000);
             this.timeOuts.push(t)
         },
 
@@ -128,8 +125,7 @@ export default {
                     const runningPp = document.getElementById("running-pp");
                     const id = setInterval(frame, 1000);
                     const time = process.burstTime;
-                    let x = process.burstTime / 100;
-                    let width = ((x) * process.endPercentage) - process.timeQuantum;
+                    let width = process.completedDuration;
                     function frame() {
                         if (width >= time) {
                             clearInterval(id);
@@ -141,7 +137,7 @@ export default {
                         }
                     }
                 })
-            }, (process.arrivalTime + process.startTime) * 1000);
+            }, (process.startTime) * 1000);
             this.timeOuts.push(t);
         },
 
@@ -149,7 +145,6 @@ export default {
             const t = setTimeout(() => {
                 this.running = [];
                 if (process.endPercentage !== 100) {
-                    this.pending.push(process);
                     return;
                 };
                 this.completed.push(process);
@@ -157,7 +152,7 @@ export default {
                     this.running = [];
                     this.$emit('process-running-completed', true);
                 }
-            }, (process.arrivalTime + process.startTime + process.timeQuantum) * 1000);
+            }, (process.endTime) * 1000);
             this.timeOuts.push(t);
         },
     },
@@ -212,6 +207,7 @@ export default {
     color: white;
     margin: 5px;
     border-radius: 5px;
+    transition: ease-in;
 }
 
 .child {

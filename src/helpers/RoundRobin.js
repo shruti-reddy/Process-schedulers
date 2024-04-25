@@ -11,6 +11,7 @@ function calculateOutputForRR(inputProcesses, quantum) {
   let outputProcesses = [];
 
   let currentTime = processes[0].arrivalTime;
+  let lastExecutionTimes = [];
   const quantumExecutionArray = [];
   // Store the execution order with start and end times
 
@@ -20,7 +21,7 @@ function calculateOutputForRR(inputProcesses, quantum) {
     for (let i = 0; i < n; i++) {
       if (burstRemaining[i] > 0 && processes[i].arrivalTime <= currentTime) {
         done = false;
-        const completedDuration=processes[i].burstTime-burstRemaining[i];
+        const completedDuration = processes[i].burstTime - burstRemaining[i];
         const currentProcess = processes[i].id;
 
         const startTime = currentTime;
@@ -32,25 +33,20 @@ function calculateOutputForRR(inputProcesses, quantum) {
           burstRemaining[i] = 0;
         }
         const endTime = currentTime;
-        
+        const timeRan = endTime - startTime;
+
         quantumExecutionArray.push({
           name: `P${currentProcess}`,
-          arrivalTime: processes[i].arrivalTime,
           burstTime: processes[i].burstTime,
+          lastExecutionTime: i < lastExecutionTimes.length ? lastExecutionTimes[i] : processes[i].arrivalTime,
           startTime,
           endTime,
-          timeQuantum: quantum,
-          endPercentage:
-            Math.round(
-              ((processes[i].burstTime - burstRemaining[i]) /
-                processes[i].burstTime) *
-                100 *
-                100
-            ) / 100,
-            completedDuration,
-            PercentageBeforeStart:
-            (completedDuration/processes[i].burstTime)*100
+          timeRan,
+          completedDuration,
+          endPercentage: Math.round(((processes[i].burstTime - burstRemaining[i]) / processes[i].burstTime)*100*100)/100,
+          percentageBeforeStart: Math.round((completedDuration / processes[i].burstTime) * 100 * 100) / 100
         });
+        lastExecutionTimes[i] = endTime;
 
         if (burstRemaining[i] > 0) {
           done = false;
@@ -68,7 +64,7 @@ function calculateOutputForRR(inputProcesses, quantum) {
 
     if (done) break;
   }
-  console.log(quantumExecutionArray);
+
   processes.forEach((process) => {
     const outputProcess = { ...process };
     outputProcesses.push(outputProcess);

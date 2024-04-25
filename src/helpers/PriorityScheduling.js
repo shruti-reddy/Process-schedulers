@@ -19,7 +19,7 @@ function calculateOutputForPriority(inputProcesses) {
       let done = true;
       let highestPriority = Infinity;
       let nextProcessIndex = -1;
-      debugger;
+
       for (let i = 0; i < n; i++) {
         if (burstRemaining[i] > 0 && processes[i].arrivalTime <= currentTime && processes[i].priority < highestPriority) {
           highestPriority = processes[i].priority;
@@ -65,7 +65,6 @@ function calculateOutputForPriority(inputProcesses) {
       const outputProcess = { ...process };
       outputProcesses.push(outputProcess);
     });
-    console.log(priorityExecutionArray)
   
     for (let i = 0; i < n; i++) {
       outputProcesses[i]["waitingTime"] = waitingTime[i];

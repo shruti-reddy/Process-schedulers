@@ -70,7 +70,6 @@ export default {
             this.isStartDisabled = true;
         },
         handleProcessCompleted() {
-            console.log('event emitted')
             this.isProcessRunning = false;
             this.isStartDisabled = false;
         }
