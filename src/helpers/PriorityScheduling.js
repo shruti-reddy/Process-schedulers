@@ -10,7 +10,7 @@ function calculateOutputForPriority(inputProcesses) {
   const completionTime = new Array(n).fill(0);
   const turnaroundTime = new Array(n).fill(0);
   let outputProcesses = [];
-
+  let lastExecutionTimes = [];
   let currentTime = processes[0].arrivalTime;
 
   const priorityExecutionArray = [];
@@ -26,6 +26,7 @@ function calculateOutputForPriority(inputProcesses) {
         processes[i].arrivalTime <= currentTime &&
         processes[i].priority < highestPriority
       ) {
+        
         highestPriority = processes[i].priority;
         nextProcessIndex = i;
         done = false;
@@ -49,18 +50,26 @@ function calculateOutputForPriority(inputProcesses) {
           processes[i].arrivalTime <= currentTime &&
           processes[i].priority < processes[nextProcessIndex].priority
         ) {
+          
           higherPriorityIndex = i;
           break;
         }
       }
-
+      const endTime = currentTime;
+      const timeRan = endTime - startTime;
       if (higherPriorityIndex !== -1) {
+        const completedDuration=processes[nextProcessIndex].burstTime - burstRemaining[nextProcessIndex];
         priorityExecutionArray.push({
           name: `P${currentProcessId}`,
           arrivalTime: processes[nextProcessIndex].arrivalTime,
           burstTime: processes[nextProcessIndex].burstTime,
+          lastExecutionTime: nextProcessIndex < lastExecutionTimes.length ? lastExecutionTimes[nextProcessIndex] : processes[nextProcessIndex].arrivalTime,
           startTime,
-          endTime: currentTime,
+          endTime,
+          timeRan,
+          completedDuration,
+          endPercentage: Math.round(((processes[nextProcessIndex].burstTime - burstRemaining[nextProcessIndex]) / processes[nextProcessIndex].burstTime)*100*100)/100,
+          percentageBeforeStart: Math.round(((completedDuration-timeRan )/ processes[nextProcessIndex].burstTime) * 100 * 100) / 100,
           priority: processes[nextProcessIndex].priority,
           remainingBurst: burstRemaining[nextProcessIndex],
         });
@@ -70,14 +79,20 @@ function calculateOutputForPriority(inputProcesses) {
         currentProcessId = processes[nextProcessIndex].id;
       }
     }
-
     const endTime = currentTime;
+    const timeRan = endTime - startTime;
+    const completedDuration=processes[nextProcessIndex].burstTime - burstRemaining[nextProcessIndex];
     priorityExecutionArray.push({
       name: `P${currentProcessId}`,
       arrivalTime: processes[nextProcessIndex].arrivalTime,
       burstTime: processes[nextProcessIndex].burstTime,
+      lastExecutionTime: nextProcessIndex < lastExecutionTimes.length ? lastExecutionTimes[nextProcessIndex] : processes[nextProcessIndex].arrivalTime,
       startTime,
       endTime,
+      timeRan,
+      completedDuration,
+      endPercentage: Math.round(((processes[nextProcessIndex].burstTime - burstRemaining[nextProcessIndex]) / processes[nextProcessIndex].burstTime)*100*100)/100,
+      percentageBeforeStart: Math.round(((completedDuration-timeRan)/ processes[nextProcessIndex].burstTime) * 100 * 100) / 100,
       priority: processes[nextProcessIndex].priority,
       remainingBurst: burstRemaining[nextProcessIndex],
     });
@@ -89,7 +104,7 @@ function calculateOutputForPriority(inputProcesses) {
   }
   for (let i = 0; i < n; i++) {
     waitingTime[i] = turnaroundTime[i] - processes[i].burstTime;
-  }
+}
 
   processes.forEach((process) => {
     const outputProcess = { ...process };
