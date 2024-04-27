@@ -42,7 +42,7 @@ export default {
             this.processes = [];
             for (let i = 0; i < this.numberOfProcesses; i++) {
                 this.processes.push({
-                    id: i+1,
+                    id: i + 1,
                     name: `P${i + 1}`,
                     arrivalTime: "",
                     burstTime: "",
@@ -53,7 +53,7 @@ export default {
     },
     computed: {
         isPreemptive() {
-            if(this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
+            if (this.selectedAlgorithm == 'FCFS' || this.selectedAlgorithm == 'SJF') {
                 return false;
             }
             return true;
@@ -72,7 +72,31 @@ export default {
         handleProcessCompleted() {
             this.isProcessRunning = false;
             this.isStartDisabled = false;
-        }
+        },
+        mockSameArrivalTimes() {
+            this.processes = [
+                    { id: 1, name: "P1", arrivalTime: 0, burstTime: 15, priority: 3 },
+                    { id: 2, name: "P2", arrivalTime: 0, burstTime: 10, priority: 1 },
+                    { id: 3, name: "P3", arrivalTime: 0, burstTime: 5, priority: 2 },
+                    { id: 4, name: "P4", arrivalTime: 0, burstTime: 10, priority: 0 },
+            ];
+            if(this.selectedAlgorithm == 'Round Robin') {
+                this.quantum = 5;
+            }
+        },
+        mockDifferentArrivalTimes() {
+            this.processes = [
+                    { id: 1, name: "P1", arrivalTime: 0, burstTime: 15, priority: 3 },
+                    { id: 2, name: "P2", arrivalTime: 0, burstTime: 10, priority: 1 },
+                    { id: 3, name: "P3", arrivalTime: 10, burstTime: 5, priority: 2 },
+                    { id: 4, name: "P4", arrivalTime: 10, burstTime: 10, priority: 0 },
+                    { id: 5, name: "P5", arrivalTime: 20, burstTime: 5, priority: 2 },
+                    { id: 6, name: "P6", arrivalTime: 30, burstTime: 10, priority: 0 },
+            ];
+            if(this.selectedAlgorithm == 'Round Robin') {
+                this.quantum = 5;
+            }
+        },
     }
 }
 </script>
@@ -89,12 +113,17 @@ export default {
                 </div>
             </div>
             <div class="wrapper" v-if="selectedAlgorithm">
+                <label>Try with sample inputs</label>
+                <button v-on:click="mockSameArrivalTimes()">Same Arrival Times</button>
+                <p>or</p>
+                <button v-on:click="mockDifferentArrivalTimes()">Different Arrival Times</button>
                 <div class="flex-row">
-                    <label>Enter number of processes to run</label>
+                    <p>or</p>
+                    <label>Manually enter number of processes to run</label>
                     <input name="totalProcess" class="abc" v-model="numberOfProcesses"></input>
                     <label v-if="selectedAlgorithm === 'Round Robin'">Quantum</label>
-                    <input v-if="selectedAlgorithm === 'Round Robin'"placeholder="Enter time Quantum" 
-                        v-model="quantum" type="number"></input>
+                    <input v-if="selectedAlgorithm === 'Round Robin'" placeholder="Enter time Quantum" v-model="quantum"
+                        type="number"></input>
 
                 </div>
                 <div v-for="process in processes" :key="process.name" class="flex-column">
@@ -106,24 +135,17 @@ export default {
                             v-model="process.priority" type="number"></input>
                     </div>
                 </div>
-                <button :disabled="isStartDisabled" v-on:click="startClicked">Start {{ selectedAlgorithm }} algorithm</button>
+                <button :disabled="isStartDisabled" v-on:click="startClicked">Start {{ selectedAlgorithm }}
+                    algorithm</button>
             </div>
         </div>
         <div class="chart">
-            <Preemptive v-if="isPreemptive"
-                :selectedAlgorithm="selectedAlgorithm" 
-                :inputProcesses="processes"
-                :isProcessRunning="isProcessRunning"
-                :quantum=Number(quantum)
+            <Preemptive v-if="isPreemptive" :selectedAlgorithm="selectedAlgorithm" :inputProcesses="processes"
+                :isProcessRunning="isProcessRunning" :quantum=Number(quantum)
                 v-on:process-running-completed="handleProcessCompleted" />
-            <NonPreemptive v-if="!isPreemptive"
-                :selectedAlgorithm="selectedAlgorithm" 
-                :inputProcesses="processes"
-                :isProcessRunning="isProcessRunning"
-                v-on:process-running-completed="handleProcessCompleted"/>
-            <OutputTable :selectedAlgorithm="selectedAlgorithm" 
-                :quantum=Number(quantum) 
-                :processes="processes"
+            <NonPreemptive v-if="!isPreemptive" :selectedAlgorithm="selectedAlgorithm" :inputProcesses="processes"
+                :isProcessRunning="isProcessRunning" v-on:process-running-completed="handleProcessCompleted" />
+            <OutputTable :selectedAlgorithm="selectedAlgorithm" :quantum=Number(quantum) :processes="processes"
                 :isProcessRunning="isProcessRunning" />
         </div>
     </div>
