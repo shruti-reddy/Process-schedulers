@@ -88,9 +88,9 @@ export default {
             this.processes = [
                     { id: 1, name: "P1", arrivalTime: 0, burstTime: 15, priority: 3 },
                     { id: 2, name: "P2", arrivalTime: 0, burstTime: 10, priority: 1 },
-                    { id: 3, name: "P3", arrivalTime: 10, burstTime: 5, priority: 2 },
-                    { id: 4, name: "P4", arrivalTime: 10, burstTime: 10, priority: 0 },
-                    { id: 5, name: "P5", arrivalTime: 20, burstTime: 5, priority: 2 },
+                    { id: 3, name: "P3", arrivalTime: 5, burstTime: 5, priority: 2 },
+                    { id: 4, name: "P4", arrivalTime: 5, burstTime: 10, priority: 0 },
+                    { id: 5, name: "P5", arrivalTime: 10, burstTime: 5, priority: 2 },
                     { id: 6, name: "P6", arrivalTime: 30, burstTime: 10, priority: 0 },
             ];
             if(this.selectedAlgorithm == 'Round Robin') {
@@ -114,9 +114,9 @@ export default {
             </div>
             <div class="wrapper" v-if="selectedAlgorithm">
                 <label>Try with sample inputs</label>
-                <button v-on:click="mockSameArrivalTimes()">Same Arrival Times</button>
+                <button class="option" v-on:click="mockSameArrivalTimes()">Same Arrival Times</button>
                 <p>or</p>
-                <button v-on:click="mockDifferentArrivalTimes()">Different Arrival Times</button>
+                <button class="option" v-on:click="mockDifferentArrivalTimes()">Different Arrival Times</button>
                 <div class="flex-row">
                     <p>or</p>
                     <label>Manually enter number of processes to run</label>
@@ -184,6 +184,11 @@ export default {
 .active {
     background-color: #1a0dab;
 }
+
+.option:hover {
+    background-color: #1a0dab;
+}
+
 
 .algorithm-chooser {
     display: flex;
