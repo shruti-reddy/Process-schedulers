@@ -21,7 +21,7 @@ function calculateOutputForRR(inputProcesses, quantum) {
     for (let i = 0; i < n; i++) {
       if (burstRemaining[i] > 0 && processes[i].arrivalTime <= currentTime) {
         done = false;
-        const completedDuration = processes[i].burstTime - burstRemaining[i];
+        const completedBeforeExecution = processes[i].burstTime - burstRemaining[i];
         const currentProcess = processes[i].id;
 
         const startTime = currentTime;
@@ -42,9 +42,9 @@ function calculateOutputForRR(inputProcesses, quantum) {
           startTime,
           endTime,
           timeRan,
-          completedDuration,
+          completedBeforeExecution,
           endPercentage: Math.round(((processes[i].burstTime - burstRemaining[i]) / processes[i].burstTime)*100*100)/100,
-          percentageBeforeStart: Math.round((completedDuration / processes[i].burstTime) * 100 * 100) / 100
+          percentageBeforeStart: Math.round((completedBeforeExecution / processes[i].burstTime) * 100 * 100) / 100
         });
         lastExecutionTimes[i] = endTime;
 

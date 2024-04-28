@@ -125,7 +125,7 @@ export default {
                     const runningPp = document.getElementById("running-pp");
                     const id = setInterval(frame, 1000);
                     const time = process.burstTime;
-                    let width = process.completedDuration;
+                    let width = process.completedBeforeExecution;
                     function frame() {
                         if (width >= time) {
                             clearInterval(id);
