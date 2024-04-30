@@ -85,8 +85,8 @@ function calculateOutputForRR(inputProcesses, quantum) {
   // Output results
   return [
     outputProcesses,
-    Math.round(averageWaitingTime),
-    Math.round(averageTurnaroundTime),
+    Math.round(averageWaitingTime*100)/100,
+    Math.round(averageTurnaroundTime*100)/100,
     quantumExecutionArray,
   ];
 }

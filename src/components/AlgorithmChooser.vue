@@ -66,6 +66,7 @@ export default {
             this.isProcessRunning = false;
         },
         startClicked() {
+            if(this.processes.length == 0) return;
             this.isProcessRunning = true;
             this.isStartDisabled = true;
         },
@@ -74,22 +75,26 @@ export default {
             this.isStartDisabled = false;
         },
         mockSameArrivalTimes() {
+            this.isStartDisabled = false;
+            this.isProcessRunning = false;
             this.processes = [
                     { id: 1, name: "P1", arrivalTime: 0, burstTime: 15, priority: 3 },
                     { id: 2, name: "P2", arrivalTime: 0, burstTime: 10, priority: 1 },
                     { id: 3, name: "P3", arrivalTime: 0, burstTime: 5, priority: 2 },
-                    { id: 4, name: "P4", arrivalTime: 0, burstTime: 10, priority: 0 },
+                    { id: 4, name: "P4", arrivalTime: 0, burstTime: 20, priority: 0 },
             ];
             if(this.selectedAlgorithm == 'Round Robin') {
                 this.quantum = 5;
             }
         },
         mockDifferentArrivalTimes() {
+            this.isStartDisabled = false;
+            this.isProcessRunning = false;
             this.processes = [
                     { id: 1, name: "P1", arrivalTime: 0, burstTime: 15, priority: 3 },
-                    { id: 2, name: "P2", arrivalTime: 0, burstTime: 10, priority: 1 },
-                    { id: 3, name: "P3", arrivalTime: 5, burstTime: 5, priority: 2 },
-                    { id: 4, name: "P4", arrivalTime: 5, burstTime: 10, priority: 0 },
+                    { id: 2, name: "P2", arrivalTime: 0, burstTime: 10, priority: 2 },
+                    { id: 3, name: "P3", arrivalTime: 5, burstTime: 5, priority: 1 },
+                    { id: 4, name: "P4", arrivalTime: 8, burstTime: 10, priority: 0 },
                     { id: 5, name: "P5", arrivalTime: 10, burstTime: 5, priority: 2 },
                     { id: 6, name: "P6", arrivalTime: 30, burstTime: 10, priority: 0 },
             ];

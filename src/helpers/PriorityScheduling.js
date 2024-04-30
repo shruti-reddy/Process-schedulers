@@ -2,7 +2,6 @@ function calculateOutputForPriority(inputProcesses) {
   // Sort processes based on arrival time
   const processes = inputProcesses.map((p) => ({ ...p }));
   processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-  console.log(processes);
 
   const n = processes.length;
   const burstRemaining = processes.map((p) => p.burstTime);
@@ -10,11 +9,11 @@ function calculateOutputForPriority(inputProcesses) {
   const completionTime = new Array(n).fill(0);
   const turnaroundTime = new Array(n).fill(0);
   let outputProcesses = [];
-  let lastExecutionTimes = new Array(n).fill(0);
+  let lastExecutionTimes = processes.map(p => p.arrivalTime);
   let currentTime = processes[0].arrivalTime;
 
   const priorityExecutionArray = [];
-  debugger;
+
   while (true) {
     let done = true;
     let highestPriority = Infinity;
@@ -128,8 +127,6 @@ function calculateOutputForPriority(inputProcesses) {
     outputProcesses[i]["turnAroundTime"] = turnaroundTime[i];
   }
 
-  console.log(priorityExecutionArray);
-
   const totalWaitingTime = waitingTime.reduce((acc, val) => acc + val, 0);
   const averageWaitingTime = totalWaitingTime / n;
   const totalTurnaroundTime = turnaroundTime.reduce((acc, val) => acc + val, 0);
@@ -137,8 +134,8 @@ function calculateOutputForPriority(inputProcesses) {
 
   return [
     outputProcesses,
-    Math.round(averageWaitingTime),
-    Math.round(averageTurnaroundTime),
+    Math.round(averageWaitingTime*100)/100,
+    Math.round(averageTurnaroundTime*100)/100,
     priorityExecutionArray,
   ];
 }

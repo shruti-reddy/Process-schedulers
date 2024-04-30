@@ -74,7 +74,7 @@ function shortestJobFirst(processes) {
     const averageWaitingTime = totalWaitTime/n;
     const averageTurnaroundTime = totalTurnaroundTime/n;
 
-    return [outputProcesses, Math.round(averageWaitingTime), Math.round(averageTurnaroundTime)];
+    return [outputProcesses, Math.round(averageWaitingTime*100)/100, Math.round(averageTurnaroundTime*100)/100];
 
 }
 
