@@ -69,6 +69,9 @@ function calculateOutputForRR(inputProcesses, quantum) {
     const outputProcess = { ...process };
     outputProcesses.push(outputProcess);
   });
+  for (let i = 0; i < n; i++) {
+    waitingTime[i] = turnaroundTime[i] - processes[i].burstTime;
+}
 
   for (let i = 0; i < n; i++) {
     outputProcesses[i]["waitingTime"] = waitingTime[i];
